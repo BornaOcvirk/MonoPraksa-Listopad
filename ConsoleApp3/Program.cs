@@ -51,9 +51,11 @@ class Program
 
         List<Vozilo> vozila = new List<Vozilo>();
         vozila.Add(new Vozilo("Toyota", "Corolla", 2020, 13990.99, "IITNFDIF83929"));
+        vozila.Add(new Vozilo("Honda", "Civic", 2019, 15990.50, "JH4KA8260MC000000"));
+        vozila.Add(new Vozilo("Ford", "Focus", 2021, 14990.00, "VF7A3254789012345"));
 
         Console.Write("Unesite marku vozila: ");
-        string unesenaMarka = (Console.ReadLine() ?? "").Trim();
+        string unesenaMarka = Console.ReadLine();
 
         bool markaPronadena = false;
 
