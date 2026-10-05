@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 
-public interface IVozilo
+interface IVozilo
 {
     void Detalji();
 }
@@ -64,17 +64,13 @@ class Program
                 markaPronadena = true;
                 Console.WriteLine($"Vozilo pronađeno: {v.Marka} {v.Model} ({v.GodinaProizvodnje}), {v.Cijena}");
                 Console.WriteLine($"Broj Sasije: {v.SkrivenaSasija()}");
+                v.Detalji();
             }
         }
 
         if (!markaPronadena)
         {
             Console.WriteLine("Vozilo s unesenom markom nije pronađeno.");
-        }
-
-        for (int i = 0; i < vozila.Count; i++)
-        {
-            vozila[i].Detalji();
         }
 
     }
