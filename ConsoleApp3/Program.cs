@@ -62,7 +62,7 @@ class Program
             if (v.Marka.Equals(unesenaMarka, StringComparison.OrdinalIgnoreCase))
             {
                 markaPronadena = true;
-                Console.WriteLine($"Vozilo pronađeno: {v.Marka} {v.Model} ({v.GodinaProizvodnje}), {v.Cijena:F2} €");
+                Console.WriteLine($"Vozilo pronađeno: {v.Marka} {v.Model} ({v.GodinaProizvodnje}), {v.Cijena}");
                 Console.WriteLine($"Broj Sasije: {v.SkrivenaSasija()}");
             }
         }
