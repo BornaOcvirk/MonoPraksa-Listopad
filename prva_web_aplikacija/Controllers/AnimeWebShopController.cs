@@ -67,10 +67,6 @@ namespace prva_web_aplikacija.Controllers
         {
             new_anime.Id = nextId;
             nextId++;
-            while(nextId - animelist.Count > 1)
-            {
-                nextId--;
-            };
             animelist.Add(new_anime);
             return Ok(new_anime);
         }
