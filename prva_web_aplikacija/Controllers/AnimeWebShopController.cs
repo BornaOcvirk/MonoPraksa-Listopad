@@ -40,8 +40,26 @@ namespace prva_web_aplikacija.Controllers
                     return animelist[i];
                 }
             }
-            return null; 
+            return null;
         }
+
+        // GET api/<AnimeWebShopController>/genre/NumberOfSeasons
+        [HttpGet("genre/{genre}")]
+        public IEnumerable<AnimeWebShop> Get(string genre, int numberOfSeasons)
+        {
+            List<AnimeWebShop> filteredlist = new List<AnimeWebShop>();
+            foreach (var anime in animelist)
+            {
+                if (anime.Genre == genre && anime.NumberOfSeasons >= numberOfSeasons)
+                {
+                    filteredlist.Add(anime);
+                }
+            }
+
+            return filteredlist;
+        }
+
+    
 
         // POST api/<AnimeWebShopController>
         [HttpPost]
