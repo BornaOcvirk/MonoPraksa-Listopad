@@ -1,0 +1,6 @@
+@prva_web_aplikacija_HostAddress = http://localhost:5113
+
+GET {{prva_web_aplikacija_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
