@@ -1,22 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\prva_web_aplikacija.Common\prva_web_aplikacija.Common.csproj" />
     <ProjectReference Include="..\prva_web_aplikacija.Model\prva_web_aplikacija.Model.csproj" />
     <ProjectReference Include="..\prva_web_aplikacija.Repository.Common\prva_web_aplikacija.Repository.Common.csproj" />
-    <ProjectReference Include="..\prva_web_aplikacija.Repository\prva_web_aplikacija.Repository.csproj" />
     <ProjectReference Include="..\prva_web_aplikacija.Service.Common\prva_web_aplikacija.Service.Common.csproj" />
-    <ProjectReference Include="..\prva_web_aplikacija.Service\prva_web_aplikacija.Service.csproj" />
   </ItemGroup>
 
 </Project>

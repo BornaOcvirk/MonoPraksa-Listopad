@@ -1,4 +1,4 @@
-﻿namespace prva_web_aplikacija
+﻿namespace prva_web_aplikacija.Model
 {
     public class AnimeWebShop
     {

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
+using prva_web_aplikacija.Common;
+using prva_web_aplikacija.Model;
+using prva_web_aplikacija.Service.Common;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,97 +11,84 @@ namespace prva_web_aplikacija.Controllers
     [ApiController]
     public class AnimeWebShopController : ControllerBase
     {
-        private static List<AnimeWebShop> animelist = new List<AnimeWebShop>
+        private readonly IAnimeWebShopService _service;
+
+        public AnimeWebShopController(IAnimeWebShopService service)
         {
-            new AnimeWebShop(1, "Naruto", "Shounen", 2, 19.99f),
-            new AnimeWebShop(2, "One Piece", "Adventure", 5, 29.99f),
-            new AnimeWebShop(3, "Attack on Titan", "Action", 4, 24.99f),
-            new AnimeWebShop(4, "My Hero Academia", "Superhero", 3, 14.99f),
-            new AnimeWebShop(5, "Demon Slayer", "Action", 2, 19.99f),
-        };
+            _service = service;
+        }
 
-        private static int nextId = animelist.Count + 1;
-
-
-
-        // GET: api/<AnimeWebShopController>
+        // GET: api/AnimeWebShop
         [HttpGet(Name = "GetAnimes")]
         public IEnumerable<AnimeWebShop> Get()
         {
-            return animelist;
+            return _service.GetAll();
         }
 
-        // GET api/<AnimeWebShopController>/5
+        // GET api/AnimeWebShop/5
         [HttpGet("{id}")]
         public AnimeWebShop Get(int id)
         {
-            for (int i = 0; i < animelist.Count; i++)
-            {
-                if (animelist[i].Id == id)
-                {
-                    return animelist[i];
-                }
-            }
-            return null;
+            return _service.GetById(id);
         }
 
-        // GET api/<AnimeWebShopController>/genre/NumberOfSeasons
+        // GET api/AnimeWebShop/genre/Action?numberOfSeasons=3
         [HttpGet("genre/{genre}")]
         public IEnumerable<AnimeWebShop> Get(string genre, int numberOfSeasons)
         {
-            List<AnimeWebShop> filteredlist = new List<AnimeWebShop>();
-            foreach (var anime in animelist)
-            {
-                if (anime.Genre == genre && anime.NumberOfSeasons >= numberOfSeasons)
-                {
-                    filteredlist.Add(anime);
-                }
-            }
-
-            return filteredlist;
+            return _service.GetByGenre(genre, numberOfSeasons);
         }
 
-    
+        // GET api/AnimeWebShop/5/price
+        [HttpGet("{id}/price")]
+        public float? GetFinalPrice(int id)
+        {
+            return _service.GetFinalPrice(id);
+        }
 
-        // POST api/<AnimeWebShopController>
+        // POST api/AnimeWebShop
         [HttpPost]
         public IActionResult Post([FromBody] AnimeWebShop new_anime)
         {
-            new_anime.Id = nextId;
-            nextId++;
-            animelist.Add(new_anime);
-            return Ok(new_anime);
+            try
+            {
+                return Ok(_service.Add(new_anime));
+            }
+            catch (BuisnessExeptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT api/<AnimeWebShopController>/5
+        // PUT api/AnimeWebShop/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] AnimeWebShop value)
+        public IActionResult Put(int id, [FromBody] AnimeWebShop value)
         {
-            for (int i = 0; i < animelist.Count; i++)
+            try
             {
-                if (animelist[i].Id == id)
-                {
-                    animelist[i].Name = value.Name;
-                    animelist[i].Genre = value.Genre;
-                    animelist[i].NumberOfSeasons = value.NumberOfSeasons;
-                    animelist[i].Price = value.Price;
-                    return;
-                }
+                bool updated = _service.Update(id, value);
+
+                if (!updated)
+                    return NotFound();      
+
+                return Ok();                
+            }
+            catch (BuisnessExeptions ex)
+            {
+                return BadRequest(ex.Message);   
             }
         }
 
-        // DELETE api/<AnimeWebShopController>/5
+        // DELETE api/AnimeWebShop/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            for (int i = 0; i < animelist.Count; i++)
-            {
-                if (animelist[i].Id == id)
-                {
-                    animelist.RemoveAt(i);
-                    return;
-                }
-            }
+            bool deleted = _service.Delete(id);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
