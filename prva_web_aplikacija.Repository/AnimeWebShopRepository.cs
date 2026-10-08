@@ -54,7 +54,6 @@ namespace prva_web_aplikacija.Repository
 
         public List<AnimeWebShop> GetByAuthor(string author)
         {
-            // a.Manga is the navigation property: EF adds the join to the manga table by itself
             return _context.Animes
                 .Where(a => a.Manga != null && EF.Functions.ILike(a.Manga.Author, "%" + author + "%"))
                 .OrderBy(a => a.Title)

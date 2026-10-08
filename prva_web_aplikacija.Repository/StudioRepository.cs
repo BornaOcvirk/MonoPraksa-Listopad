@@ -31,5 +31,32 @@ namespace prva_web_aplikacija.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.StudioId == id);
         }
+
+        public async Task<List<Studio>> PutByAuthorAsync(Studio studio)
+        
+        {
+            _context.Studios.Update(studio);
+            await _context.SaveChangesAsync();
+            return new List<Studio> {studio};
+        }
+        public async Task<Studio?> PostAsync(Guid id, Studio studio)
+        {
+            _context.Studios.Add(studio);
+            await _context.SaveChangesAsync();
+            return studio;
+        }
+
+        public async Task<Studio?> DeleteAsync(Guid id)
+        {
+            var studio = await GetByIdAsync(id);
+            if (studio == null)
+                return null;
+
+            _context.Studios.Remove(studio);
+            await _context.SaveChangesAsync();
+            return studio;
+        }
+
     }
 }
+

@@ -131,3 +131,5 @@ update Anime set Genre = 'Action',          Number_of_seasons = 5, Price = 59.99
 update Anime set Genre = 'Action',          Number_of_seasons = 4, Price = 44.99 where Title = 'Demon Slayer';
 update Anime set Genre = 'Action',          Number_of_seasons = 2, Price = 39.99 where Title = 'Jujutsu Kaisen';
 update Anime set Genre = 'Science fiction', Number_of_seasons = 1, Price = 27.99 where Title = 'Cowboy Bebop';
+
+select column_name from information_schema.columns where table_name = 'anime';
