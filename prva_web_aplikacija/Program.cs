@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository;
 using prva_web_aplikacija.Repository.Common;
 using prva_web_aplikacija.Service;
@@ -5,32 +7,38 @@ using prva_web_aplikacija.Service.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddNpgsqlDataSource(
-    builder.Configuration.GetConnectionString("PraksaDB")!);
+// EF Core: one PraksaDbContext per HTTP request (scoped), connected to PostgreSQL
+builder.Services.AddDbContext<PraksaDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-builder.Services.AddScoped<IAnimeWebShopRepository, AnimeWebShopRepository>();   
-builder.Services.AddScoped<IAnimeWebShopService, AnimeWebShopService>();         
-builder.Services.AddTransient<IPriceCalculator, PriceCalculator>();              
+// Anime
+builder.Services.AddScoped<IAnimeWebShopRepository, AnimeWebShopRepository>();
+builder.Services.AddScoped<IAnimeWebShopService, AnimeWebShopService>();
+
+// Manga
+builder.Services.AddScoped<IMangaRepository, MangaRepository>();
+builder.Services.AddScoped<IMangaService, MangaService>();
+
+// Studio (async)
+builder.Services.AddScoped<IStudioRepository, StudioRepository>();
+builder.Services.AddScoped<IStudioService, StudioService>();
+
+// Helpers: transient and singleton lifetimes
+builder.Services.AddTransient<IPriceCalculator, PriceCalculator>();
 builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

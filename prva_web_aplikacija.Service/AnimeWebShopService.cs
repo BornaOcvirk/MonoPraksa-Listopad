@@ -41,6 +41,11 @@ namespace prva_web_aplikacija.Service
             return _repository.GetByGenre(genre, numberOfSeasons);
         }
 
+        public List<AnimeWebShop> GetByAuthor(string author)
+        {
+            return _repository.GetByAuthor(author);
+        }
+
         public AnimeWebShop Add(AnimeWebShop anime)
         {
             Validate(anime);

@@ -16,7 +16,7 @@ namespace prva_web_aplikacija.Controllers
             _service = service;
         }
 
-        // GET: api/AnimeWebShop
+        // GET api/AnimeWebShop
         [HttpGet(Name = "GetAnimes")]
         public IEnumerable<AnimeWebShop> Get()
         {
@@ -34,11 +34,18 @@ namespace prva_web_aplikacija.Controllers
             return anime;
         }
 
-        // GET api/AnimeWebShop/genre/Action?numberOfSeasons=3
+        // GET api/AnimeWebShop/genre/Action?numberOfSeasons=2
         [HttpGet("genre/{genre}")]
         public IEnumerable<AnimeWebShop> Get(string genre, int numberOfSeasons)
         {
             return _service.GetByGenre(genre, numberOfSeasons);
+        }
+
+        // GET api/AnimeWebShop/author/Isayama
+        [HttpGet("author/{author}")]
+        public IEnumerable<AnimeWebShop> GetByAuthor(string author)
+        {
+            return _service.GetByAuthor(author);
         }
 
         // GET api/AnimeWebShop/{guid}/price

@@ -11,6 +11,7 @@ namespace prva_web_aplikacija.Service.Common
         List<AnimeWebShop> GetAll();
         AnimeWebShop? GetById(Guid id);
         List<AnimeWebShop> GetByGenre(string genre, int numberOfSeasons);
+        List<AnimeWebShop> GetByAuthor(string author);
         AnimeWebShop Add(AnimeWebShop anime);
         bool Update(Guid id, AnimeWebShop anime);
         bool Delete(Guid id);
