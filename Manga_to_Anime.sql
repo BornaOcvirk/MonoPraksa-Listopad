@@ -114,3 +114,20 @@ drop table if exists Studio cascade;
 rollback;
 
 select * from Studio
+select * from Anime
+select * from Manga
+
+alter table Anime
+add column Genre varchar(100),
+add column Number_of_seasons int,
+add column Price numeric(10,2);
+
+update Anime set Genre = 'Fantasy',         Number_of_seasons = 1, Price = 29.99 where Title = 'Fullmetal Alchemist';
+update Anime set Genre = 'Fantasy',         Number_of_seasons = 1, Price = 39.99 where Title = 'Fullmetal Alchemist: Brotherhood';
+update Anime set Genre = 'Action',          Number_of_seasons = 3, Price = 49.99 where Title = 'Attack on Titan';
+update Anime set Genre = 'Action',          Number_of_seasons = 1, Price = 34.99 where Title = 'Attack on Titan: The Final Season';
+update Anime set Genre = 'Thriller',        Number_of_seasons = 1, Price = 24.99 where Title = 'Death Note';
+update Anime set Genre = 'Action',          Number_of_seasons = 5, Price = 59.99 where Title = 'Naruto';
+update Anime set Genre = 'Action',          Number_of_seasons = 4, Price = 44.99 where Title = 'Demon Slayer';
+update Anime set Genre = 'Action',          Number_of_seasons = 2, Price = 39.99 where Title = 'Jujutsu Kaisen';
+update Anime set Genre = 'Science fiction', Number_of_seasons = 1, Price = 27.99 where Title = 'Cowboy Bebop';

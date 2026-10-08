@@ -8,12 +8,11 @@ namespace prva_web_aplikacija.Service
 {
     public class IdGenerator : IIdGenerator
     {
-        private int _current = 5; 
         public Guid InstanceId { get; } = Guid.NewGuid();
-        public Guid GenerateId => InstanceId;
-        public int NextId()
+
+        public Guid NextId()
         {
-            return Interlocked.Increment(ref _current);
+            return Guid.CreateVersion7();
         }
     }
 }

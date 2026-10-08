@@ -6,7 +6,7 @@ namespace prva_web_aplikacija.Service.Common
 {
     public interface IIdGenerator
     {
-        Guid GenerateId { get; }
-        int NextId();
+        Guid InstanceId { get; }
+        Guid NextId();
     }
 }

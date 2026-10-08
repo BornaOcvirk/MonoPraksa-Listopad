@@ -11,6 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddNpgsqlDataSource(
+    builder.Configuration.GetConnectionString("PraksaDB")!);
+
 builder.Services.AddScoped<IAnimeWebShopRepository, AnimeWebShopRepository>();   
 builder.Services.AddScoped<IAnimeWebShopService, AnimeWebShopService>();         
 builder.Services.AddTransient<IPriceCalculator, PriceCalculator>();              

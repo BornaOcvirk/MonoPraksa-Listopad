@@ -8,10 +8,12 @@ namespace prva_web_aplikacija.Repository.Common
     public interface IAnimeWebShopRepository
     {
         List<AnimeWebShop> GetAll();
-        AnimeWebShop? GetById(int id);
+        AnimeWebShop? GetById(Guid id);
+        List<AnimeWebShop> GetByGenre(string genre, int minSeasons);
         void Add(AnimeWebShop anime);
-        bool Update(int id, AnimeWebShop anime);
-        bool Delete(int id);
+        bool Update(Guid id, AnimeWebShop anime);
+        bool Delete(Guid id);
+        bool StudioExists(Guid studioId);
     }
 }
 

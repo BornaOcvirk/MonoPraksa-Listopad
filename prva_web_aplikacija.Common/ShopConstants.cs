@@ -6,6 +6,6 @@ namespace prva_web_aplikacija.Common
 {
     public static class ShopConstants
     {
-        public const float Pdv = 0.25f;
+        public const decimal Pdv = 0.25m;
     }
 }

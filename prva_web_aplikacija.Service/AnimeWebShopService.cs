@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using prva_web_aplikacija.Common;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository.Common;
 using prva_web_aplikacija.Service.Common;
-using prva_web_aplikacija.Common;
 
 namespace prva_web_aplikacija.Service
 {
@@ -31,22 +31,14 @@ namespace prva_web_aplikacija.Service
             return _repository.GetAll();
         }
 
-        public AnimeWebShop? GetById(int id)
+        public AnimeWebShop? GetById(Guid id)
         {
             return _repository.GetById(id);
         }
 
         public List<AnimeWebShop> GetByGenre(string genre, int numberOfSeasons)
         {
-            List<AnimeWebShop> filteredlist = new List<AnimeWebShop>();
-            foreach (var anime in _repository.GetAll())
-            {
-                if (anime.Genre == genre && anime.NumberOfSeasons >= numberOfSeasons)
-                {
-                    filteredlist.Add(anime);
-                }
-            }
-            return filteredlist;
+            return _repository.GetByGenre(genre, numberOfSeasons);
         }
 
         public AnimeWebShop Add(AnimeWebShop anime)
@@ -57,18 +49,18 @@ namespace prva_web_aplikacija.Service
             return anime;
         }
 
-        public bool Update(int id, AnimeWebShop anime)
+        public bool Update(Guid id, AnimeWebShop anime)
         {
             Validate(anime);
             return _repository.Update(id, anime);
         }
 
-        public bool Delete(int id)
+        public bool Delete(Guid id)
         {
             return _repository.Delete(id);
         }
 
-        public float? GetFinalPrice(int id)
+        public decimal? GetFinalPrice(Guid id)
         {
             var anime = _repository.GetById(id);
             if (anime == null)
@@ -88,6 +80,11 @@ namespace prva_web_aplikacija.Service
             if (anime.NumberOfSeasons < 0)
                 throw new BuisnessExeptions("Broj sezona ne može biti negativan.");
 
+            if (anime.ReleaseDate == default)
+                throw new BuisnessExeptions("Anime mora imati datum izlaska.");
+
+            if (!_repository.StudioExists(anime.StudioId))
+                throw new BuisnessExeptions("Studio ne postoji.");
         }
     }
 }

@@ -7,6 +7,6 @@ namespace prva_web_aplikacija.Service.Common
     public interface IPriceCalculator
     {
         Guid InstanceId { get; }
-        float CalculateFinalPrice(float price);
+        decimal CalculateFinalPrice(decimal price);
     }
 }

@@ -9,11 +9,11 @@ namespace prva_web_aplikacija.Service.Common
     {
         Guid InstanceId { get; }
         List<AnimeWebShop> GetAll();
-        AnimeWebShop? GetById(int id);
+        AnimeWebShop? GetById(Guid id);
         List<AnimeWebShop> GetByGenre(string genre, int numberOfSeasons);
         AnimeWebShop Add(AnimeWebShop anime);
-        bool Update(int id, AnimeWebShop anime);
-        bool Delete(int id);
-        float? GetFinalPrice(int id);
+        bool Update(Guid id, AnimeWebShop anime);
+        bool Delete(Guid id);
+        decimal? GetFinalPrice(Guid id);
     }
 }

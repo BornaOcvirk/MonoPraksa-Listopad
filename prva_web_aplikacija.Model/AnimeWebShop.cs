@@ -2,22 +2,12 @@
 {
     public class AnimeWebShop
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        public string Genre { get; set; }
-
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Genre { get; set; } = string.Empty;
         public int NumberOfSeasons { get; set; }
-
-        public float Price { get; set; }
-
-        public AnimeWebShop(int id, string name, string genre, int numberofseasons, float price)
-        {
-            Id = id;
-            Name = name;
-            Genre = genre;
-            NumberOfSeasons = numberofseasons;
-            Price = price;
-        }
+        public decimal Price { get; set; }
+        public DateOnly ReleaseDate { get; set; }
+        public Guid StudioId { get; set; }
     }
 }

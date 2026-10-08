@@ -3,8 +3,6 @@ using prva_web_aplikacija.Common;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Service.Common;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace prva_web_aplikacija.Controllers
 {
     [Route("api/[controller]")]
@@ -25,11 +23,15 @@ namespace prva_web_aplikacija.Controllers
             return _service.GetAll();
         }
 
-        // GET api/AnimeWebShop/5
-        [HttpGet("{id}")]
-        public AnimeWebShop Get(int id)
+        // GET api/AnimeWebShop/{guid}
+        [HttpGet("{id:guid}")]
+        public ActionResult<AnimeWebShop> Get(Guid id)
         {
-            return _service.GetById(id);
+            var anime = _service.GetById(id);
+            if (anime == null)
+                return NotFound();
+
+            return anime;
         }
 
         // GET api/AnimeWebShop/genre/Action?numberOfSeasons=3
@@ -39,11 +41,15 @@ namespace prva_web_aplikacija.Controllers
             return _service.GetByGenre(genre, numberOfSeasons);
         }
 
-        // GET api/AnimeWebShop/5/price
-        [HttpGet("{id}/price")]
-        public float? GetFinalPrice(int id)
+        // GET api/AnimeWebShop/{guid}/price
+        [HttpGet("{id:guid}/price")]
+        public ActionResult<decimal> GetFinalPrice(Guid id)
         {
-            return _service.GetFinalPrice(id);
+            var price = _service.GetFinalPrice(id);
+            if (price == null)
+                return NotFound();
+
+            return price.Value;
         }
 
         // POST api/AnimeWebShop
@@ -60,28 +66,28 @@ namespace prva_web_aplikacija.Controllers
             }
         }
 
-        // PUT api/AnimeWebShop/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] AnimeWebShop value)
+        // PUT api/AnimeWebShop/{guid}
+        [HttpPut("{id:guid}")]
+        public IActionResult Put(Guid id, [FromBody] AnimeWebShop value)
         {
             try
             {
                 bool updated = _service.Update(id, value);
 
                 if (!updated)
-                    return NotFound();      
+                    return NotFound();
 
-                return Ok();                
+                return Ok();
             }
             catch (BuisnessExeptions ex)
             {
-                return BadRequest(ex.Message);   
+                return BadRequest(ex.Message);
             }
         }
 
-        // DELETE api/AnimeWebShop/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // DELETE api/AnimeWebShop/{guid}
+        [HttpDelete("{id:guid}")]
+        public IActionResult Delete(Guid id)
         {
             bool deleted = _service.Delete(id);
 
