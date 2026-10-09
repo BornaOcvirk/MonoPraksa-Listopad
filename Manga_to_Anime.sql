@@ -2,6 +2,15 @@ drop table if exists Studio cascade;
 drop table if exists Manga cascade;
 drop table if exists Anime cascade;
 
+
+Create table Users(
+	User_Id uuid default gen_random_uuid() primary key,
+	Username varchar(255) unique not null,
+	Password_hash text not null,
+	Role varchar(255) not null default 'Customer'
+					  check(role in('Customer', 'Admin'))
+);
+
 Create table Studio(
 	Studio_Id uuid default gen_random_uuid() primary key,
 	Name_s varchar(255) unique not null,
@@ -77,6 +86,18 @@ update Studio set Established = '1979-05-01' where Name_s = 'Studio Pierrot';
 update Studio set Established = '2000-10-01' where Name_s = 'ufotable';
 update Studio set Established = '1972-09-01' where Name_s = 'Sunrise';
 
+INSERT INTO users (username, password_hash, role) VALUES
+    ('borna', 'AQAAAAIAAYagAAAAEApjXMSimG9fH5v5O5eKG2orG3bQcaQBtn/HB/ruCPE3u9WTjvpEjgr3kXYBRbMJyQ==', 'Admin'),
+    ('sakura_fan', 'AQAAAAIAAYagAAAAEA551aZWWd/cXhnER7YY4ldAgmHhIEWHdyS3O9ZIVQWzvZ7u08DJDGSWzxqcVX59ww==', 'Customer'),
+    ('naruto_uzumaki', 'AQAAAAIAAYagAAAAEDh2142QukQD1aNu4dknAo6GwUrhLsMlBfekBjnZ3MLQl+5mUgOJpn52ebFfBcjYGA==', 'Customer'),
+    ('mikasa_a', 'AQAAAAIAAYagAAAAEMR1ip1GWtcNBc82fSldDE6hezcdpcnPOfTxtSwFNBloTmvSH1xxo5E0q2tdT05hiQ==', 'Customer'),
+    ('luffy_d', 'AQAAAAIAAYagAAAAEOo4VXNRfGJZBR65Khb2dnbyFp3BUruok3D7YkM1eRZo4u3iIU4cmzySfMVszh8ksA==', 'Customer'),
+    ('tanjiro_k', 'AQAAAAIAAYagAAAAENl2WfsCsUpfOpUC1AJearWXqKepCcp1PtWtxBCQ/LFTRcpfjyCLHXqhS5slSNXEFg==', 'Customer'),
+    ('goku_ssj', 'AQAAAAIAAYagAAAAEDNGbKvVniP4okkmU8utk8qVRSARR95ClQhWI6N1R0x0WByGhhJGFDMlTvusxagwzg==', 'Customer'),
+    ('levi_ack', 'AQAAAAIAAYagAAAAEGlzHqidIUvlD9wyzUbUqEtR3L+2MevgtF77SYdweHSVLit3eo/sIQfr3cw0l9ZrmQ==', 'Customer'),
+    ('nami_nav', 'AQAAAAIAAYagAAAAEAsT9IX5+5F60j/O2Lj+k4gx7YQuF616enyu1tz7yMez2+PsAbGWhcAEOD9fCJyNlA==', 'Customer'),
+    ('eren_y', 'AQAAAAIAAYagAAAAEDyfBik5XtS543SJW0Xpw4CCW7534RGHONBwA1/gEzKDNL95DKMfbF3YVN8eRVjg3g==', 'Customer')
+ON CONFLICT (username) DO NOTHING;
 
 --order with where
 Select M.Title as Manga_title from Manga M
@@ -133,3 +154,4 @@ update Anime set Genre = 'Action',          Number_of_seasons = 2, Price = 39.99
 update Anime set Genre = 'Science fiction', Number_of_seasons = 1, Price = 27.99 where Title = 'Cowboy Bebop';
 
 select column_name from information_schema.columns where table_name = 'anime';
+select * from Users

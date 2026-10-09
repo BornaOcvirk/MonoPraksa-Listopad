@@ -10,9 +10,9 @@ namespace prva_web_aplikacija.Repository.Common
         Task<List<Studio>> GetAllAsync();
         Task<Studio?> GetByIdAsync(Guid id);
 
-        Task<List<Studio>> PutByAuthorAsync(Studio studio);
+        Task<Studio?> PutAsync(Guid id, Studio studio);
 
-        Task<Studio?> PostAsync(Guid id, Studio studio);
+        Task<Studio?> PostAsync(Studio studio);
 
         Task<Studio?> DeleteAsync(Guid id);
     }

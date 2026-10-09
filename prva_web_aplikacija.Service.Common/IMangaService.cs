@@ -8,9 +8,9 @@ namespace prva_web_aplikacija.Service.Common
 {
     public interface IMangaService
     {
-        List<Manga> GetAll();
-        Manga? GetById(Guid id);
-        List<Manga> GetByAuthor(string author);
-        List<Manga> GetByStudio(Guid studioId);
+        Task<List<Manga>> GetAllAsync();
+        Task<Manga?> GetByIdAsync(Guid id);
+        Task<List<Manga>> GetByAuthorAsync(string author);
+        Task<List<Manga>> GetByStudioAsync(Guid studioId);
     }
 }

@@ -17,37 +17,67 @@ namespace prva_web_aplikacija.Repository
             _context = context;
         }
 
-        public List<Manga> GetAll()
+        public async Task<List<Manga>> GetAllAsync()
         {
-            return _context.Mangas
+            return await _context.Mangas
                 .AsNoTracking()
                 .OrderBy(m => m.Title)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Manga? GetById(Guid id)
+        public async Task<Manga?> GetByIdAsync(Guid id)
         {
-            return _context.Mangas
-                .AsNoTracking()
-                .FirstOrDefault(m => m.MangaId == id);
+            return await _context.Mangas.FindAsync(id);
         }
 
-        public List<Manga> GetByAuthor(string author)
+        public async Task<Manga?> PutAsync(Guid id, Manga manga)
         {
-            return _context.Mangas
+            var existingManga = await _context.Mangas.FindAsync(id);
+            if(existingManga == null)
+            {
+                return null;
+            }
+            _context.Mangas.Update(manga);
+            await _context.SaveChangesAsync();
+            return manga;
+        }
+
+        public async Task<Manga?> PostAsync(Manga manga)
+        {
+            _context.Mangas.Add(manga);
+            await _context.SaveChangesAsync();
+            return manga;
+        }
+
+        public async Task<Manga?> DeleteAsync(Guid id)
+        {
+            var manga = await _context.Mangas.FindAsync(id);
+            if (manga == null)
+            {
+                return null;
+            }
+            _context.Mangas.Remove(manga);
+            await _context.SaveChangesAsync();
+            return manga;
+        }
+
+        public async Task<List<Manga>> GetByAuthorAsync(string author)
+        {
+            return await _context.Mangas
                 .AsNoTracking()
                 .Where(m => EF.Functions.ILike(m.Author, "%" + author + "%"))
                 .OrderBy(m => m.Title)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<Manga> GetByStudio(Guid studioId)
+        public async Task<List<Manga>> GetByStudioAsync(Guid studioId)
         {
-            return _context.Mangas
+            return await _context.Mangas
                 .AsNoTracking()
                 .Where(m => m.StudioId == studioId)
                 .OrderBy(m => m.Title)
-                .ToList();
+                .ToListAsync();
         }
+
     }
 }

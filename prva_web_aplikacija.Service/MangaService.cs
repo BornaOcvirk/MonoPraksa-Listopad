@@ -16,25 +16,24 @@ namespace prva_web_aplikacija.Service
         {
             _repository = repository;
         }
-
-        public List<Manga> GetAll()
+        public Task<List<Manga>> GetAllAsync()
         {
-            return _repository.GetAll();
+            return _repository.GetAllAsync();
         }
 
-        public Manga? GetById(Guid id)
+        public Task<Manga?> GetByIdAsync(Guid id)
         {
-            return _repository.GetById(id);
+            return _repository.GetByIdAsync(id);
         }
 
-        public List<Manga> GetByAuthor(string author)
+        public Task<List<Manga>> GetByAuthorAsync(string author)
         {
-            return _repository.GetByAuthor(author);
+            return _repository.GetByAuthorAsync(author);
         }
 
-        public List<Manga> GetByStudio(Guid studioId)
+        public Task<List<Manga>> GetByStudioAsync(Guid studioId)
         {
-            return _repository.GetByStudio(studioId);
+            return _repository.GetByStudioAsync(studioId);
         }
     }
 }

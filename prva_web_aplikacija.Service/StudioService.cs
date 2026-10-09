@@ -26,5 +26,20 @@ namespace prva_web_aplikacija.Service
         {
             return _repository.GetByIdAsync(id);
         }
+
+        public Task<List<Studio>> PutAsync(Guid id, Studio studio)
+        {
+            return _repository.PutAsync(id, studio);
+        }
+
+        public Task<Studio?> PostAsync(Studio studio)
+        {
+            return _repository.PostAsync(studio);
+        }
+
+        public Task<Studio?> DeleteAsync(Guid id)
+        {
+            return _repository.DeleteAsync(id);
+        }
     }
 }

@@ -17,6 +17,8 @@ public partial class PraksaDbContext : DbContext
 
     public virtual DbSet<Studio> Studios { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Anime>(entity =>
@@ -100,6 +102,20 @@ public partial class PraksaDbContext : DbContext
             entity.Property(e => e.NameS)
                 .HasMaxLength(255)
                 .HasColumnName("name_s");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("users");
+
+            entity.HasKey(e => e.User_id);
+
+            entity.HasIndex(e => e.Username).IsUnique();
+
+            entity.Property(e => e.User_id).HasColumnName("user_id");
+            entity.Property(e => e.Username).HasMaxLength(255).HasColumnName("username");
+            entity.Property(e => e.Password_hash).HasColumnName("password_hash");
+            entity.Property(e => e.Role).HasMaxLength(255).HasColumnName("role");
         });
 
         OnModelCreatingPartial(modelBuilder);

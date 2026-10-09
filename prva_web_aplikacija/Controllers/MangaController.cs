@@ -17,16 +17,16 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/Manga
         [HttpGet]
-        public IEnumerable<Manga> Get()
+        public async Task<IEnumerable<Manga>> Get()
         {
-            return _service.GetAll();
+            return await _service.GetAllAsync();
         }
 
         // GET api/Manga/{guid}
         [HttpGet("{id:guid}")]
-        public ActionResult<Manga> Get(Guid id)
+        public async Task<ActionResult<Manga>> Get(Guid id)
         {
-            var manga = _service.GetById(id);
+            var manga = await _service.GetByIdAsync(id);
             if (manga == null)
                 return NotFound();
 
@@ -35,16 +35,16 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/Manga/author/Isayama
         [HttpGet("author/{author}")]
-        public IEnumerable<Manga> GetByAuthor(string author)
+        public async Task<IEnumerable<Manga>> GetByAuthor(string author)
         {
-            return _service.GetByAuthor(author);
+            return await _service.GetByAuthorAsync(author);
         }
 
         // GET api/Manga/studio/{studioGuid}
         [HttpGet("studio/{studioId:guid}")]
-        public IEnumerable<Manga> GetByStudio(Guid studioId)
+        public async Task<IEnumerable<Manga>> GetByStudio(Guid studioId)
         {
-            return _service.GetByStudio(studioId);
+            return await _service.GetByStudioAsync(studioId);
         }
     }
 }
