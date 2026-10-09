@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\prva_web_aplikacija.Common\prva_web_aplikacija.Common.csproj" />
     <ProjectReference Include="..\prva_web_aplikacija.Model\prva_web_aplikacija.Model.csproj" />
     <ProjectReference Include="..\prva_web_aplikacija.Repository.Common\prva_web_aplikacija.Repository.Common.csproj" />

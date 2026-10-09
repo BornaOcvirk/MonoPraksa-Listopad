@@ -4,6 +4,7 @@ using System.Text;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace prva_web_aplikacija.Repository
 {
@@ -17,30 +18,44 @@ namespace prva_web_aplikacija.Repository
         }
         public async Task<List<User>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync()
-                .asNoTracking()
+            return await _context.Users
+                .AsNoTracking()
                 .OrderBy(u => u.Username)
                 .ToListAsync();
         }
-        Task<User?> GetByIdAsync(Guid id)
+        public async Task<User?> GetByIdAsync(Guid id)
         {
-
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.User_id == id);
         }
-        Task<User?> GetByUsernameAsync(string username)
+        public async Task<User?> GetByUsernameAsync(string username)
         {
-
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
         }
-        Task<bool> DoesUserExist(string username)
+        public async Task<bool> DoesUserExist(string username)
         {
-
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
+            return user != null;
         }
-        Task<User> AddAsync(User user)
+        public async Task<User> AddAsync(User user)
         {
-
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
-        Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return false;
 
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository;
@@ -29,6 +30,10 @@ builder.Services.AddScoped<IStudioService, StudioService>();
 // Helpers: transient and singleton lifetimes
 builder.Services.AddTransient<IPriceCalculator, PriceCalculator>();
 builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
 

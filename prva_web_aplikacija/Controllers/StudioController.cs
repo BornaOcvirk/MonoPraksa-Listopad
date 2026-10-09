@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prva_web_aplikacija.Model;
+using prva_web_aplikacija.Service;
 using prva_web_aplikacija.Service.Common;
 
 namespace prva_web_aplikacija.Controllers
@@ -26,7 +27,7 @@ namespace prva_web_aplikacija.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Studio>> Get(Guid id)
         {
-            var studio = await _service.GetByIdAsync(id);
+            var studio = await _service.GetStudioByIdAsync(id);
             if (studio == null)
                 return NotFound();
 

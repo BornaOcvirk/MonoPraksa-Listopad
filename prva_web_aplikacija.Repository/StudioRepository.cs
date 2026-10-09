@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository.Common;
@@ -25,24 +25,11 @@ namespace prva_web_aplikacija.Repository
                 .ToListAsync();
         }
 
-        public async Task<Studio?> GetByIdAsync(Guid id)
+        public async Task<Studio?> GetStudioByIdAsync(Guid id)
         {
-            return await _context.Studios
-                .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.StudioId == id);
+            return await _context.Studios.FirstOrDefaultAsync(s => s.StudioId == id);
         }
 
-        public async Task<Studio?> PutAsync(Guid id, Studio studio)
-
-        { 
-            var existingStudio = await GetByIdAsync(id);
-            if (existingStudio == null)
-                return null;
-
-            _context.Studios.Update(studio);
-            await _context.SaveChangesAsync();
-            return studio;
-        }
         public async Task<Studio?> PostAsync(Studio studio)
         {
             _context.Studios.Add(studio);
@@ -50,9 +37,21 @@ namespace prva_web_aplikacija.Repository
             return studio;
         }
 
+        public async Task<Studio?> PutAsync(Guid id, Studio studio)
+        {
+            var existingStudio = await GetStudioByIdAsync(id);
+            if (existingStudio == null)
+                return null;
+
+            studio.StudioId = id;
+            _context.Entry(existingStudio).CurrentValues.SetValues(studio);
+            await _context.SaveChangesAsync();
+            return existingStudio;
+        }
+
         public async Task<Studio?> DeleteAsync(Guid id)
         {
-            var studio = await GetByIdAsync(id);
+            var studio = await GetStudioByIdAsync(id);
             if (studio == null)
                 return null;
 
@@ -60,7 +59,5 @@ namespace prva_web_aplikacija.Repository
             await _context.SaveChangesAsync();
             return studio;
         }
-
     }
 }
-

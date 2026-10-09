@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Threading.Tasks;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository.Common;
 using prva_web_aplikacija.Service.Common;
@@ -10,36 +9,36 @@ namespace prva_web_aplikacija.Service
 {
     public class StudioService : IStudioService
     {
-        private readonly IStudioRepository _repository;
+        private readonly IStudioRepository _studioRepository;
 
-        public StudioService(IStudioRepository repository)
+        public StudioService(IStudioRepository studioRepository)
         {
-            _repository = repository;
+            _studioRepository = studioRepository;
         }
 
-        public Task<List<Studio>> GetAllAsync()
+        public async Task<List<Studio>> GetAllAsync()
         {
-            return _repository.GetAllAsync();
+            return await _studioRepository.GetAllAsync();
         }
 
-        public Task<Studio?> GetByIdAsync(Guid id)
+        public async Task<Studio?> GetStudioByIdAsync(Guid id)
         {
-            return _repository.GetByIdAsync(id);
+            return await _studioRepository.GetStudioByIdAsync(id);
         }
 
-        public Task<List<Studio>> PutAsync(Guid id, Studio studio)
+        public async Task<Studio?> PostAsync(Studio studio)
         {
-            return _repository.PutAsync(id, studio);
+            return await _studioRepository.PostAsync(studio);
         }
 
-        public Task<Studio?> PostAsync(Studio studio)
+        public async Task<Studio?> PutAsync(Guid id, Studio studio)
         {
-            return _repository.PostAsync(studio);
+            return await _studioRepository.PutAsync(id, studio);
         }
 
-        public Task<Studio?> DeleteAsync(Guid id)
+        public async Task<Studio?> DeleteAsync(Guid id)
         {
-            return _repository.DeleteAsync(id);
+            return await _studioRepository.DeleteAsync(id);
         }
     }
 }
