@@ -29,14 +29,7 @@ namespace PrvaWebAplikacija.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            try
-            {
-                return Ok(await _userService.GetUserByIdAsync(id));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await _userService.GetUserByIdAsync(id));
         }
 
         // DELETE api/user/{id}

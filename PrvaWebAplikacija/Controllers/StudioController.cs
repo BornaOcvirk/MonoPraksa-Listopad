@@ -32,14 +32,7 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Studio>> Get(Guid id)
         {
-            try
-            {
-                return await _service.GetStudioByIdAsync(id);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return await _service.GetStudioByIdAsync(id);
         }
     }
 }

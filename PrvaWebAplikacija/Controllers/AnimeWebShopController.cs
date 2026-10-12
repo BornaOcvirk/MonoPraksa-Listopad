@@ -12,12 +12,10 @@ namespace PrvaWebAplikacija.Controllers
     public class AnimeWebShopController : ControllerBase
     {
         private readonly IAnimeWebShopService _service;
-        private readonly ILogger<AnimeWebShopController> _logger;
 
-        public AnimeWebShopController(IAnimeWebShopService service, ILogger<AnimeWebShopController> logger)
+        public AnimeWebShopController(IAnimeWebShopService service)
         {
             _service = service;
-            _logger = logger;
         }
 
         // GET api/AnimeWebShop
@@ -33,14 +31,7 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<AnimeWebShop>> Get(Guid id)
         {
-            try
-            {
-                return await _service.GetByIdAsync(id);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return await _service.GetByIdAsync(id);
         }
 
         // GET api/AnimeWebShop/genre/Action?numberOfSeasons=2
@@ -64,66 +55,30 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<decimal>> GetFinalPrice(Guid id)
         {
-            try
-            {
-                return await _service.GetFinalPriceAsync(id);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return await _service.GetFinalPriceAsync(id);
         }
 
         // POST api/AnimeWebShop
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AnimeWebShop new_anime)
         {
-            try
-            {
-                return Ok(await _service.AddAsync(new_anime));
-            }
-            catch (BusinessRuleException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await _service.AddAsync(new_anime));
         }
 
         // PUT api/AnimeWebShop/{guid}
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] AnimeWebShop value)
         {
-            try
-            {
-                await _service.UpdateAsync(id, value);
-                return Ok();
-            }
-            catch (BusinessRuleException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            finally
-            {
-                _logger.LogInformation("PUT anime {Id} finished.", id);
-            }
+            await _service.UpdateAsync(id, value);
+            return Ok();
         }
 
         // DELETE api/AnimeWebShop/{guid}
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                await _service.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _service.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
