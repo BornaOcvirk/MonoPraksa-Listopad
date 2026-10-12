@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="../PrvaWebAplikacija.Common/PrvaWebAplikacija.Common.csproj" Id="4dbb8148-e1bb-4634-8ac1-de020b12bb6f" />
+  <Project Path="../PrvaWebAplikacija.Model/PrvaWebAplikacija.Model.csproj" Id="2cb7d61c-5011-4dce-8efd-59b906befaea" />
+  <Project Path="../PrvaWebAplikacija.Repository.Common/PrvaWebAplikacija.Repository.Common.csproj" Id="f1ab14a8-f8d5-46f9-9557-a74c11f988cc" />
+  <Project Path="../PrvaWebAplikacija.Repository/PrvaWebAplikacija.Repository.csproj" Id="2a27392d-257b-44d0-8b40-3acdad4ac17e" />
+  <Project Path="../PrvaWebAplikacija.Service.Common/PrvaWebAplikacija.Service.Common.csproj" Id="2b6d2e43-ce1a-41e1-a646-e1afe56edf0f" />
+  <Project Path="../PrvaWebAplikacija.Service/PrvaWebAplikacija.Service.csproj" Id="390840ca-445c-45e0-8d69-647d5360519a" />
+  <Project Path="PrvaWebAplikacija.csproj" />
+</Solution>
