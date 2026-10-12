@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using prva_web_aplikacija.Common;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Repository.Common;
 using prva_web_aplikacija.Service.Common;
@@ -39,7 +40,7 @@ namespace prva_web_aplikacija.Service
             var user = new User
             {
                 Username = username,
-                Role = "Customer"
+                Role = Roles.Customer
             };
             user.Password_hash = _passwordHasher.HashPassword(user, dto.Password);
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using prva_web_aplikacija.Common;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Service.Common;
 
@@ -7,7 +8,7 @@ namespace prva_web_aplikacija.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -30,24 +31,6 @@ namespace prva_web_aplikacija.Controllers
         {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null) return NotFound();
-            return Ok(user);
-        }
-
-        // POST api/user  (register)
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserDto dto)
-        {
-            var created = await _userService.CreateAsync(dto);
-            if (created == null) return Conflict("Username is already taken.");
-            return CreatedAtAction(nameof(GetById), new { id = created.User_id }, created);
-        }
-
-        // POST api/user/login
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
-        {
-            var user = await _userService.LoginAsync(dto);
-            if (user == null) return Unauthorized("Wrong username or password.");
             return Ok(user);
         }
 

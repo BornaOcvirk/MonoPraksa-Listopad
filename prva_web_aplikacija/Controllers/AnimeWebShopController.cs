@@ -2,11 +2,13 @@
 using prva_web_aplikacija.Common;
 using prva_web_aplikacija.Model;
 using prva_web_aplikacija.Service.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace prva_web_aplikacija.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Admin)]
     public class AnimeWebShopController : ControllerBase
     {
         private readonly IAnimeWebShopService _service;
@@ -18,6 +20,7 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/AnimeWebShop
         [HttpGet(Name = "GetAnimes")]
+        [AllowAnonymous]
         public IEnumerable<AnimeWebShop> Get()
         {
             return _service.GetAll();
@@ -25,6 +28,7 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/AnimeWebShop/{guid}
         [HttpGet("{id:guid}")]
+        [AllowAnonymous]
         public ActionResult<AnimeWebShop> Get(Guid id)
         {
             var anime = _service.GetById(id);
@@ -36,6 +40,7 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/AnimeWebShop/genre/Action?numberOfSeasons=2
         [HttpGet("genre/{genre}")]
+        [AllowAnonymous]
         public IEnumerable<AnimeWebShop> Get(string genre, int numberOfSeasons)
         {
             return _service.GetByGenre(genre, numberOfSeasons);
@@ -43,6 +48,7 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/AnimeWebShop/author/Isayama
         [HttpGet("author/{author}")]
+        [AllowAnonymous]
         public IEnumerable<AnimeWebShop> GetByAuthor(string author)
         {
             return _service.GetByAuthor(author);
@@ -50,6 +56,7 @@ namespace prva_web_aplikacija.Controllers
 
         // GET api/AnimeWebShop/{guid}/price
         [HttpGet("{id:guid}/price")]
+        [AllowAnonymous]
         public ActionResult<decimal> GetFinalPrice(Guid id)
         {
             var price = _service.GetFinalPrice(id);
