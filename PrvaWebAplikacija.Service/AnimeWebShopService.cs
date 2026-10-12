@@ -31,9 +31,12 @@ namespace PrvaWebAplikacija.Service
             return await _repository.GetAllAsync();
         }
 
-        public async Task<AnimeWebShop?> GetByIdAsync(Guid id)
+        public async Task<AnimeWebShop> GetByIdAsync(Guid id)
         {
-            return await _repository.GetByIdAsync(id);
+            var anime = await _repository.GetByIdAsync(id);
+            if (anime == null)
+                throw new NotFoundException("Anime ne postoji.");
+            return anime;
         }
 
         public async Task<List<AnimeWebShop>> GetByGenreAsync(string genre, int numberOfSeasons)
@@ -56,26 +59,34 @@ namespace PrvaWebAplikacija.Service
 
         public async Task<bool> UpdateAsync(Guid id, AnimeWebShop anime)
         {
+            var existingAnime = await _repository.GetByIdAsync(id);
+            if (existingAnime == null)
+                throw new NotFoundException("Anime ne postoji.");
             await ValidateAsync(anime);
             return await _repository.UpdateAsync(id, anime);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
+            var existingAnime = await _repository.GetByIdAsync(id);
+            if (existingAnime == null)
+                throw new NotFoundException("Anime ne postoji.");
+
             return await _repository.DeleteAsync(id);
         }
 
-        public async Task<decimal?> GetFinalPriceAsync(Guid id)
+        public async Task<decimal> GetFinalPriceAsync(Guid id)
         {
             var anime = await _repository.GetByIdAsync(id);
             if (anime == null)
-                return null;
+                throw new NotFoundException("Anime ne postoji.");
 
             return _priceCalculator.CalculateFinalPrice(anime.Price);
         }
 
         private async Task ValidateAsync(AnimeWebShop anime)
         {
+
             if (string.IsNullOrWhiteSpace(anime.Name))
                 throw new BusinessRuleException("Anime mora imati naziv.");
 
@@ -91,5 +102,7 @@ namespace PrvaWebAplikacija.Service
             if (!await _repository.StudioExistsAsync(anime.StudioId))
                 throw new BusinessRuleException("Studio ne postoji.");
         }
+
+        
     }
 }

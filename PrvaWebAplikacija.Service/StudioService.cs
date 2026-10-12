@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using PrvaWebAplikacija.Model;
 using PrvaWebAplikacija.Repository.Common;
 using PrvaWebAplikacija.Service.Common;
+using PrvaWebAplikacija.Common;
 
 namespace PrvaWebAplikacija.Service
 {
@@ -21,9 +22,12 @@ namespace PrvaWebAplikacija.Service
             return await _studioRepository.GetAllAsync();
         }
 
-        public async Task<Studio?> GetStudioByIdAsync(Guid id)
+        public async Task<Studio> GetStudioByIdAsync(Guid id)
         {
-            return await _studioRepository.GetStudioByIdAsync(id);
+            var studio = await _studioRepository.GetStudioByIdAsync(id);
+            if (studio == null)
+                throw new NotFoundException("Studio ne postoji.");
+            return studio;
         }
 
         public async Task<Studio?> PostAsync(Studio studio)

@@ -12,10 +12,12 @@ namespace PrvaWebAplikacija.Controllers
     public class AnimeWebShopController : ControllerBase
     {
         private readonly IAnimeWebShopService _service;
+        private readonly ILogger<AnimeWebShopController> _logger;
 
-        public AnimeWebShopController(IAnimeWebShopService service)
+        public AnimeWebShopController(IAnimeWebShopService service, ILogger<AnimeWebShopController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         // GET api/AnimeWebShop
@@ -31,11 +33,14 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<AnimeWebShop>> Get(Guid id)
         {
-            var anime = await _service.GetByIdAsync(id);
-            if (anime == null)
-                return NotFound();
-
-            return anime;
+            try
+            {
+                return await _service.GetByIdAsync(id);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET api/AnimeWebShop/genre/Action?numberOfSeasons=2
@@ -59,11 +64,14 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<decimal>> GetFinalPrice(Guid id)
         {
-            var price = await _service.GetFinalPriceAsync(id);
-            if (price == null)
-                return NotFound();
-
-            return price.Value;
+            try
+            {
+                return await _service.GetFinalPriceAsync(id);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // POST api/AnimeWebShop
@@ -86,16 +94,20 @@ namespace PrvaWebAplikacija.Controllers
         {
             try
             {
-                bool updated = await _service.UpdateAsync(id, value);
-
-                if (!updated)
-                    return NotFound();
-
+                await _service.UpdateAsync(id, value);
                 return Ok();
             }
             catch (BusinessRuleException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                _logger.LogInformation("PUT anime {Id} finished.", id);
             }
         }
 
@@ -103,12 +115,15 @@ namespace PrvaWebAplikacija.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            bool deleted = await _service.DeleteAsync(id);
-
-            if (!deleted)
-                return NotFound();
-
-            return NoContent();
+            try
+            {
+                await _service.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

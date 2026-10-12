@@ -24,10 +24,12 @@ namespace PrvaWebAplikacija.Service
             var users = await _userRepository.GetAllAsync();
             return users.Select(ToDto).ToList();
         }
-        public async Task<UserDto?> GetUserByIdAsync(Guid id)
+        public async Task<UserDto> GetUserByIdAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            return user == null ? null : ToDto(user);
+            if (user == null)
+                throw new NotFoundException("Korisnik ne postoji.");
+            return ToDto(user);
         }
 
         public async Task<UserDto?> CreateAsync(CreateUserDto dto)

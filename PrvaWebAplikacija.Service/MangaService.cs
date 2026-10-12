@@ -5,6 +5,7 @@ using System.Text;
 using PrvaWebAplikacija.Model;
 using PrvaWebAplikacija.Repository.Common;
 using PrvaWebAplikacija.Service.Common;
+using PrvaWebAplikacija.Common;
 
 namespace PrvaWebAplikacija.Service
 {
@@ -21,9 +22,12 @@ namespace PrvaWebAplikacija.Service
             return _repository.GetAllAsync();
         }
 
-        public Task<Manga?> GetByIdAsync(Guid id)
+        public async Task<Manga> GetByIdAsync(Guid id)
         {
-            return _repository.GetByIdAsync(id);
+            var manga = await _repository.GetByIdAsync(id);
+            if (manga == null)
+                throw new NotFoundException("Manga ne postoji.");
+            return manga;
         }
 
         public Task<List<Manga>> GetByAuthorAsync(string author)

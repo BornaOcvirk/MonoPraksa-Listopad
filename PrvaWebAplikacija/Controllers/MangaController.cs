@@ -31,11 +31,14 @@ namespace PrvaWebAplikacija.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Manga>> Get(Guid id)
         {
-            var manga = await _service.GetByIdAsync(id);
-            if (manga == null)
-                return NotFound();
-
-            return manga;
+            try
+            {
+                return await _service.GetByIdAsync(id);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET api/Manga/author/Isayama
