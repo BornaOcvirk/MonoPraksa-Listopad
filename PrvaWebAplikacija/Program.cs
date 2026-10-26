@@ -24,6 +24,16 @@ builder.Host.UseSerilog((context, config) => config
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// CORS: allow the React frontend (Vite, see FrontendUrl in appsettings.json) to call this API
+var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy => policy
+        .WithOrigins(frontendUrl)
+        .AllowAnyHeader()     // e.g. Authorization (the JWT token) and Content-Type
+        .AllowAnyMethod());   // GET, POST, PUT, DELETE
+});
+
 // EF Core: one PraksaDbContext per HTTP request (scoped), connected to PostgreSQL
 builder.Services.AddDbContext<PraksaDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -93,8 +103,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();   
-app.UseAuthorization();    
+app.UseCors("Frontend");   // must come before authentication
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

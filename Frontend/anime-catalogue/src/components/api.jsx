@@ -1,7 +1,22 @@
-async function request(path, { method = 'GET', body } = {}) {
+/* eslint-disable react-refresh/only-export-components */
+
+// Backend address, read from the .env file (VITE_API_URL=http://localhost:5113)
+const API_URL = import.meta.env.VITE_API_URL
+
+async function request(path, { method = 'GET', body, query } = {}) {
+    // { search: 'titan', genre: '' } → ?search=titan (empty values are skipped)
+    let qs = ''
+    if (query) {
+        const clean = Object.fromEntries(
+            Object.entries(query).filter(([, v]) => v !== undefined && v !== null && v !== '')
+        )
+        const params = new URLSearchParams(clean).toString()
+        if (params) qs = '?' + params
+    }
+
     const token = localStorage.getItem('token')
 
-    const res = await fetch(path, {
+    const res = await fetch(API_URL + path + qs, {
         method,
         headers: {
             ...(body && { 'Content-Type': 'application/json' }),
@@ -10,18 +25,16 @@ async function request(path, { method = 'GET', body } = {}) {
         body: body ? JSON.stringify(body) : undefined,
     })
 
-    // The backend sends errors as plain text, e.g. "Wrong username or password."
+    // The backend sends errors as plain texssword."
     const text = await res.text()
     let data
     try { data = text ? JSON.parse(text) : null } catch { data = text }
 
     if (!res.ok) {
-        throw new Error(typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`)
+         throw new Error(typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`)
     }
     return data
 }
-
-// Backend returns { token, expiresAt, user: { user_id, username, role } }
 function saveSession(result) {
     localStorage.setItem('token', result.token)
     localStorage.setItem('user', JSON.stringify(result.user))
@@ -46,3 +59,6 @@ export function logout() {
 export function getCurrentUser() {
     try { return JSON.parse(localStorage.getItem('user')) } catch { return null }
 }
+export const searchAnime    = (query) => request('/api/AnimeWebCatalogue', { query })
+export const getAnimeGenres = ()      => request('/api/AnimeWebCatalogue/genres')
+export const getStudios = () => request('/api/Studio')
