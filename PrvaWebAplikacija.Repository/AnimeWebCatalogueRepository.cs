@@ -8,15 +8,15 @@ using PrvaWebAplikacija.Repository.Common;
 
 namespace PrvaWebAplikacija.Repository
 {
-    public class AnimeWebShopRepository : IAnimeWebShopRepository
+    public class AnimeWebCatalogueRepository : IAnimeWebCatalogueRepository
     {
         private readonly PraksaDbContext _context;
 
-        public AnimeWebShopRepository(PraksaDbContext context)
+        public AnimeWebCatalogueRepository(PraksaDbContext context)
         {
             _context = context;
         }
-        private static readonly Expression<Func<Anime, AnimeWebShop>> ToModel = a => new AnimeWebShop
+        private static readonly Expression<Func<Anime, AnimeWebCatalogue>> ToModel = a => new AnimeWebCatalogue
         {
             Id = a.AnimeId,
             Name = a.Title,
@@ -27,7 +27,7 @@ namespace PrvaWebAplikacija.Repository
             StudioId = a.StudioId
         };
 
-        public async Task<List<AnimeWebShop>> GetAllAsync()
+        public async Task<List<AnimeWebCatalogue>> GetAllAsync()
         {
             return await _context.Animes
                 .OrderBy(a => a.Title)
@@ -35,7 +35,7 @@ namespace PrvaWebAplikacija.Repository
                 .ToListAsync();
         }
 
-        public async Task<AnimeWebShop?> GetByIdAsync(Guid id)
+        public async Task<AnimeWebCatalogue?> GetByIdAsync(Guid id)
         {
             return await _context.Animes
                 .Where(a => a.AnimeId == id)
@@ -43,7 +43,7 @@ namespace PrvaWebAplikacija.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<AnimeWebShop>> GetByGenreAsync(string genre, int minSeasons)
+        public async Task<List<AnimeWebCatalogue>> GetByGenreAsync(string genre, int minSeasons)
         {
             return await _context.Animes
                 .Where(a => a.Genre == genre && a.NumberOfSeasons >= minSeasons)
@@ -52,7 +52,7 @@ namespace PrvaWebAplikacija.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<AnimeWebShop>> GetByAuthorAsync(string author)
+        public async Task<List<AnimeWebCatalogue>> GetByAuthorAsync(string author)
         {
             return await _context.Animes
                 .Where(a => a.Manga != null && EF.Functions.ILike(a.Manga.Author, "%" + author + "%"))
@@ -61,7 +61,7 @@ namespace PrvaWebAplikacija.Repository
                 .ToListAsync();
         }
 
-        public async Task AddAsync(AnimeWebShop anime)
+        public async Task AddAsync(AnimeWebCatalogue anime)
         {
             var entity = new Anime
             {
@@ -78,7 +78,7 @@ namespace PrvaWebAplikacija.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(Guid id, AnimeWebShop anime)
+        public async Task<bool> UpdateAsync(Guid id, AnimeWebCatalogue anime)
         {
             var entity = await _context.Animes.FirstOrDefaultAsync(a => a.AnimeId == id);
             if (entity == null)

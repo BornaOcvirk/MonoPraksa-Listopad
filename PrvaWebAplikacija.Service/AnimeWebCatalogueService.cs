@@ -8,16 +8,16 @@ using PrvaWebAplikacija.Service.Common;
 
 namespace PrvaWebAplikacija.Service
 {
-    public class AnimeWebShopService : IAnimeWebShopService
+    public class AnimeWebCatalogueService : IAnimeWebCatalogueService
     {
-        private readonly IAnimeWebShopRepository _repository;
+        private readonly IAnimeWebCatalogueRepository _repository;
         private readonly IIdGenerator _idGenerator;
         private readonly IPriceCalculator _priceCalculator;
 
         public Guid InstanceId { get; } = Guid.NewGuid();
 
-        public AnimeWebShopService(
-            IAnimeWebShopRepository repository,
+        public AnimeWebCatalogueService(
+            IAnimeWebCatalogueRepository repository,
             IIdGenerator idGenerator,
             IPriceCalculator priceCalculator)
         {
@@ -26,12 +26,12 @@ namespace PrvaWebAplikacija.Service
             _priceCalculator = priceCalculator;
         }
 
-        public async Task<List<AnimeWebShop>> GetAllAsync()
+        public async Task<List<AnimeWebCatalogue>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<AnimeWebShop> GetByIdAsync(Guid id)
+        public async Task<AnimeWebCatalogue> GetByIdAsync(Guid id)
         {
             var anime = await _repository.GetByIdAsync(id);
             if (anime == null)
@@ -39,17 +39,17 @@ namespace PrvaWebAplikacija.Service
             return anime;
         }
 
-        public async Task<List<AnimeWebShop>> GetByGenreAsync(string genre, int numberOfSeasons)
+        public async Task<List<AnimeWebCatalogue>> GetByGenreAsync(string genre, int numberOfSeasons)
         {
             return await _repository.GetByGenreAsync(genre, numberOfSeasons);
         }
 
-        public async Task<List<AnimeWebShop>> GetByAuthorAsync(string author)
+        public async Task<List<AnimeWebCatalogue>> GetByAuthorAsync(string author)
         {
             return await _repository.GetByAuthorAsync(author);
         }
 
-        public async Task<AnimeWebShop> AddAsync(AnimeWebShop anime)
+        public async Task<AnimeWebCatalogue> AddAsync(AnimeWebCatalogue anime)
         {
             await ValidateAsync(anime);
             anime.Id = _idGenerator.NextId();
@@ -57,7 +57,7 @@ namespace PrvaWebAplikacija.Service
             return anime;
         }
 
-        public async Task<bool> UpdateAsync(Guid id, AnimeWebShop anime)
+        public async Task<bool> UpdateAsync(Guid id, AnimeWebCatalogue anime)
         {
             var existingAnime = await _repository.GetByIdAsync(id);
             if (existingAnime == null)
@@ -84,7 +84,7 @@ namespace PrvaWebAplikacija.Service
             return _priceCalculator.CalculateFinalPrice(anime.Price);
         }
 
-        private async Task ValidateAsync(AnimeWebShop anime)
+        private async Task ValidateAsync(AnimeWebCatalogue anime)
         {
 
             if (string.IsNullOrWhiteSpace(anime.Name))

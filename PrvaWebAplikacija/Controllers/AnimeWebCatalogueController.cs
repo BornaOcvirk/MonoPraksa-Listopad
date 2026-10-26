@@ -9,48 +9,48 @@ namespace PrvaWebAplikacija.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = Roles.Admin)]
-    public class AnimeWebShopController : ControllerBase
+    public class AnimeWebCatalogueController : ControllerBase
     {
-        private readonly IAnimeWebShopService _service;
+        private readonly IAnimeWebCatalogueService _service;
 
-        public AnimeWebShopController(IAnimeWebShopService service)
+        public AnimeWebCatalogueController(IAnimeWebCatalogueService service)
         {
             _service = service;
         }
 
-        // GET api/AnimeWebShop
+        // GET api/AnimeWebCatalogue
         [HttpGet(Name = "GetAnimes")]
         [AllowAnonymous]
-        public async Task<IEnumerable<AnimeWebShop>> Get()
+        public async Task<IEnumerable<AnimeWebCatalogue>> Get()
         {
             return await _service.GetAllAsync();
         }
 
-        // GET api/AnimeWebShop/{guid}
+        // GET api/AnimeWebCatalogue/{guid}
         [HttpGet("{id:guid}")]
         [AllowAnonymous]
-        public async Task<ActionResult<AnimeWebShop>> Get(Guid id)
+        public async Task<ActionResult<AnimeWebCatalogue>> Get(Guid id)
         {
             return await _service.GetByIdAsync(id);
         }
 
-        // GET api/AnimeWebShop/genre/Action?numberOfSeasons=2
+        // GET api/AnimeWebCatalogue/genre/Action?numberOfSeasons=2
         [HttpGet("genre/{genre}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<AnimeWebShop>> Get(string genre, int numberOfSeasons)
+        public async Task<IEnumerable<AnimeWebCatalogue>> Get(string genre, int numberOfSeasons)
         {
             return await _service.GetByGenreAsync(genre, numberOfSeasons);
         }
 
-        // GET api/AnimeWebShop/author/Isayama
+        // GET api/AnimeWebCatalogue/author/Isayama
         [HttpGet("author/{author}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<AnimeWebShop>> GetByAuthor(string author)
+        public async Task<IEnumerable<AnimeWebCatalogue>> GetByAuthor(string author)
         {
             return await _service.GetByAuthorAsync(author);
         }
 
-        // GET api/AnimeWebShop/{guid}/price
+        // GET api/AnimeWebCatalogue/{guid}/price
         [HttpGet("{id:guid}/price")]
         [AllowAnonymous]
         public async Task<ActionResult<decimal>> GetFinalPrice(Guid id)
@@ -58,22 +58,22 @@ namespace PrvaWebAplikacija.Controllers
             return await _service.GetFinalPriceAsync(id);
         }
 
-        // POST api/AnimeWebShop
+        // POST api/AnimeWebCatalogue
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AnimeWebShop new_anime)
+        public async Task<IActionResult> Post([FromBody] AnimeWebCatalogue new_anime)
         {
             return Ok(await _service.AddAsync(new_anime));
         }
 
-        // PUT api/AnimeWebShop/{guid}
+        // PUT api/AnimeWebCatalogue/{guid}
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] AnimeWebShop value)
+        public async Task<IActionResult> Put(Guid id, [FromBody] AnimeWebCatalogue value)
         {
             await _service.UpdateAsync(id, value);
             return Ok();
         }
 
-        // DELETE api/AnimeWebShop/{guid}
+        // DELETE api/AnimeWebCatalogue/{guid}
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {

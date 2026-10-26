@@ -29,8 +29,8 @@ builder.Services.AddDbContext<PraksaDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
 // Anime
-builder.Services.AddScoped<IAnimeWebShopRepository, AnimeWebShopRepository>();
-builder.Services.AddScoped<IAnimeWebShopService, AnimeWebShopService>();
+builder.Services.AddScoped<IAnimeWebCatalogueRepository, AnimeWebCatalogueRepository>();
+builder.Services.AddScoped<IAnimeWebCatalogueService, AnimeWebCatalogueService>();
 
 // Manga
 builder.Services.AddScoped<IMangaRepository, MangaRepository>();
