@@ -3,7 +3,7 @@ drop table if exists Manga cascade;
 drop table if exists Anime cascade;
 
 
-Create table Users(
+Create table if not exists Users(
 	User_Id uuid default gen_random_uuid() primary key,
 	Username varchar(255) unique not null,
 	Password_hash text not null,
@@ -102,7 +102,7 @@ ON CONFLICT (username) DO NOTHING;
 --order with where
 Select M.Title as Manga_title from Manga M
 where Volumes between 20 and 50
-order by M.Title
+order by M.Title;
 
 --inner join
 Select Name_s as Ime_Studia, Author, A.Popularity as Anime_Popularity from Studio
@@ -121,7 +121,7 @@ Select Name_s as Ime_Studia from Studio
 inner join Anime using (Studio_Id)
 inner join Manga using (Manga_Id)
 where Volumes > 20
-group by Name_s
+group by Name_s;
 
 --group by and count
 select Studio_id, Name_s, count(*) as number_of_anime
@@ -134,9 +134,9 @@ begin;
 drop table if exists Studio cascade;
 rollback;
 
-select * from Studio
-select * from Anime
-select * from Manga
+select * from Studio;
+select * from Anime;
+select * from Manga;
 
 alter table Anime
 add column Genre varchar(100),
@@ -154,4 +154,4 @@ update Anime set Genre = 'Action',          Number_of_seasons = 2, Price = 39.99
 update Anime set Genre = 'Science fiction', Number_of_seasons = 1, Price = 27.99 where Title = 'Cowboy Bebop';
 
 select column_name from information_schema.columns where table_name = 'anime';
-select * from Users
+select * from Users;

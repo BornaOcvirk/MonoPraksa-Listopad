@@ -18,12 +18,20 @@ namespace PrvaWebAplikacija.Controllers
             _service = service;
         }
 
-        // GET api/AnimeWebCatalogue
+        // GET api/AnimeWebCatalogue?search=titan&genre=Action&author=Isayama&studioId=...&minSeasons=2&year=2013&popularity=High&sortBy=popularity&sortDescending=true&page=1&pageSize=20
         [HttpGet(Name = "GetAnimes")]
         [AllowAnonymous]
-        public async Task<IEnumerable<AnimeWebCatalogue>> Get()
+        public async Task<PagedResult<AnimeWebCatalogue>> Get([FromQuery] AnimeCatalogueQuery query)
         {
-            return await _service.GetAllAsync();
+            return await _service.SearchAsync(query);
+        }
+
+        // GET api/AnimeWebCatalogue/genres
+        [HttpGet("genres")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<string>> GetGenres()
+        {
+            return await _service.GetGenresAsync();
         }
 
         // GET api/AnimeWebCatalogue/{guid}

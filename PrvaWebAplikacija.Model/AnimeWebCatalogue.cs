@@ -9,5 +9,10 @@
         public decimal Price { get; set; }
         public DateOnly ReleaseDate { get; set; }
         public Guid StudioId { get; set; }
+        public Guid? MangaId { get; set; }
+        public string? Popularity { get; set; }
+        public string? StudioName { get; set; }
+        public string? MangaTitle { get; set; }
+        public string? Author { get; set; }
     }
 }

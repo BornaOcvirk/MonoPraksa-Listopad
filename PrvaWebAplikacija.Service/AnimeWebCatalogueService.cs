@@ -84,6 +84,23 @@ namespace PrvaWebAplikacija.Service
             return _priceCalculator.CalculateFinalPrice(anime.Price);
         }
 
+        public async Task<PagedResult<AnimeWebCatalogue>> SearchAsync(AnimeCatalogueQuery query)
+        {
+            // Keep paging within safe limits
+            query.Page = Math.Max(query.Page, 1);
+            query.PageSize = Math.Clamp(query.PageSize, 1, 100);
+
+            if (query.Year is < 1900 or > 2100)
+                throw new BusinessRuleException("Neispravna godina.");
+
+            return await _repository.SearchAsync(query);
+        }
+
+        public async Task<List<string>> GetGenresAsync()
+        {
+            return await _repository.GetGenresAsync();
+        }
+
         private async Task ValidateAsync(AnimeWebCatalogue anime)
         {
 
@@ -101,6 +118,9 @@ namespace PrvaWebAplikacija.Service
 
             if (!await _repository.StudioExistsAsync(anime.StudioId))
                 throw new BusinessRuleException("Studio ne postoji.");
+
+            if (anime.MangaId.HasValue && !await _repository.MangaExistsAsync(anime.MangaId.Value))
+                throw new BusinessRuleException("Manga ne postoji.");
         }
 
         
