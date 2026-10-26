@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { getCurrentUser, logout, searchAnime, getAnimeGenres, getStudios } from './api'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { getCurrentUser, logout, searchAnime, getAnimeGenres, getStudios, deleteAnime } from './api'
 
 const PAGE_SIZE = 6
 
 function Home() {
     const user = getCurrentUser()
+    const isAdmin = user?.role === 'Admin'
     const navigate = useNavigate()
 
-    // What the user typed or picked
     const [search, setSearch] = useState('')
     const [author, setAuthor] = useState('')
     const [genre, setGenre] = useState('')
     const [studioId, setStudioId] = useState('')
     const [page, setPage] = useState(1)
+    const [reloadKey, setReloadKey] = useState(0)
 
-    // Data from the backend
     const [animes, setAnimes] = useState([])
     const [totalCount, setTotalCount] = useState(0)
     const [totalPages, setTotalPages] = useState(1)
@@ -23,24 +23,15 @@ function Home() {
     const [studios, setStudios] = useState([])
     const [error, setError] = useState('')
 
-    // Load the dropdown options once
     useEffect(() => {
         getAnimeGenres().then(setGenres).catch(err => setError(err.message))
         getStudios().then(setStudios).catch(err => setError(err.message))
     }, [])
 
-    // Search again every time a filter or the page changes
     useEffect(() => {
-        let ignore = false // ignore old answers if the user keeps typing
+        let ignore = false
 
-        searchAnime({
-            search,
-            author,
-            genre,
-            studioId,
-            page,
-            pageSize: PAGE_SIZE,
-        })
+        searchAnime({ search, author, genre, studioId, page, pageSize: PAGE_SIZE })
             .then(result => {
                 if (ignore) return
                 setAnimes(result.items)
@@ -51,9 +42,8 @@ function Home() {
             .catch(err => { if (!ignore) setError(err.message) })
 
         return () => { ignore = true }
-    }, [search, author, genre, studioId, page])
+    }, [search, author, genre, studioId, page, reloadKey])
 
-    // Not logged in → go to login (this comes AFTER the hooks; React requires that)
     if (!user) {
         return <Navigate to="/login" replace />
     }
@@ -71,12 +61,30 @@ function Home() {
         setPage(1)
     }
 
+    async function handleDelete(anime) {
+        if (!window.confirm(`Delete "${anime.name}"? This can't be undone.`)) return
+
+        try {
+            await deleteAnime(anime.id)
+            if (animes.length === 1 && page > 1) {
+                setPage(p => p - 1)
+            } else {
+                setReloadKey(k => k + 1)
+            }
+        } catch (err) {
+            setError(err.message)
+        }
+    }
+
     return (
         <div className="page">
             <header className="header">
                 <h1>Anime Catalogue</h1>
-                <div>
-                    {user.username} ({user.role}){' '}
+                <div className="header-actions">
+                    {isAdmin && (
+                        <Link to="/anime/new" className="button-link">+ Add anime</Link>
+                    )}
+                    <span>{user.username} ({user.role})</span>
                     <button onClick={handleLogout}>Log out</button>
                 </div>
             </header>
@@ -124,6 +132,13 @@ function Home() {
                         <p>Studio: {a.studioName}</p>
                         <p>{a.mangaTitle ? `Manga: ${a.mangaTitle} by ${a.author}` : 'Original anime (no manga)'}</p>
                         <p>Released: {a.releaseDate}</p>
+
+                        {isAdmin && (
+                            <div className="card-actions">
+                                <Link to={`/anime/${a.id}/edit`} className="button-link">Edit</Link>
+                                <button className="danger" onClick={() => handleDelete(a)}>Delete</button>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
@@ -140,4 +155,5 @@ function Home() {
         </div>
     )
 }
+
 export default Home

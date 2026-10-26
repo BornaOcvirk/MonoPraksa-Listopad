@@ -1,10 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 
-// Backend address, read from the .env file (VITE_API_URL=http://localhost:5113)
 const API_URL = import.meta.env.VITE_API_URL
 
 async function request(path, { method = 'GET', body, query } = {}) {
-    // { search: 'titan', genre: '' } → ?search=titan (empty values are skipped)
     let qs = ''
     if (query) {
         const clean = Object.fromEntries(
@@ -25,16 +23,18 @@ async function request(path, { method = 'GET', body, query } = {}) {
         body: body ? JSON.stringify(body) : undefined,
     })
 
-    // The backend sends errors as plain texssword."
     const text = await res.text()
     let data
     try { data = text ? JSON.parse(text) : null } catch { data = text }
 
     if (!res.ok) {
-         throw new Error(typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`)
+        if (res.status === 401 && !text) throw new Error('You need to log in.')
+        if (res.status === 403) throw new Error('Only admins can do this.')
+        throw new Error(typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`)
     }
     return data
 }
+
 function saveSession(result) {
     localStorage.setItem('token', result.token)
     localStorage.setItem('user', JSON.stringify(result.user))
@@ -59,6 +59,16 @@ export function logout() {
 export function getCurrentUser() {
     try { return JSON.parse(localStorage.getItem('user')) } catch { return null }
 }
-export const searchAnime    = (query) => request('/api/AnimeWebCatalogue', { query })
-export const getAnimeGenres = ()      => request('/api/AnimeWebCatalogue/genres')
+
+const ANIME = '/api/AnimeWebCatalogue'
+
+export const searchAnime    = (query) => request(ANIME, { query })
+export const getAnimeGenres = ()      => request(`${ANIME}/genres`)
+export const getAnime       = (id)    => request(`${ANIME}/${id}`)
+
+export const createAnime = (anime)     => request(ANIME, { method: 'POST', body: anime })
+export const updateAnime = (id, anime) => request(`${ANIME}/${id}`, { method: 'PUT', body: anime })
+export const deleteAnime = (id)        => request(`${ANIME}/${id}`, { method: 'DELETE' })
+
 export const getStudios = () => request('/api/Studio')
+export const getMangas  = () => request('/api/Manga')
