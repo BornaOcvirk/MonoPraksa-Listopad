@@ -11,14 +11,14 @@ function AddAnime() {
     }
 
     return (
-        <div className="page">
+        <main>
             <h1>Add anime</h1>
             <AnimeForm
                 submitLabel="Add anime"
                 onSubmit={handleCreate}
                 onCancel={() => navigate('/')}
             />
-        </div>
+        </main>
     )
 }
 

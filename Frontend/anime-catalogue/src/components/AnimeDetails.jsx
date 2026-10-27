@@ -1,6 +1,7 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getCurrentUser, getAnime, getStudios, getMangas, deleteAnime } from './api'
+import Fields from './Fields'
 
 // Loads one anime. If the endpoint only returns ids, look up the studio and manga names.
 async function loadAnime(id) {
@@ -31,10 +32,6 @@ function AnimeDetails() {
         return () => { ignore = true }
     }, [id])
 
-    if (!user) {
-        return <Navigate to="/login" replace />
-    }
-
     async function handleDelete() {
         if (!window.confirm(`Delete "${anime.name}"? This can't be undone.`)) return
         try {
@@ -50,13 +47,15 @@ function AnimeDetails() {
         ['Seasons', anime.numberOfSeasons],
         ['Price', Number(anime.price).toFixed(2)],
         ['Released', anime.releaseDate],
-        ['Studio', anime.studioName],
-        ['Popularity', anime.popularity || 'Not set'],
-        ['Manga', anime.mangaTitle ? `${anime.mangaTitle} by ${anime.author}` : 'Original anime (no manga)'],
+        ['Studio', <Link to={`/studios/${anime.studioId}`}>{anime.studioName ?? 'View studio'}</Link>],
+        ['Popularity', anime.popularity],
+        ['Manga', anime.mangaId
+            ? <Link to={`/mangas/${anime.mangaId}`}>{anime.mangaTitle} by {anime.author}</Link>
+            : 'Original anime (no manga)'],
     ]
 
     return (
-        <main className="page">
+        <main>
             <Link to="/">← Back to catalogue</Link>
 
             {error && <p className="error">{error}</p>}
@@ -65,16 +64,9 @@ function AnimeDetails() {
             {anime && (
                 <article className="details">
                     <h1>{anime.name}</h1>
-                    <dl>
-                        {fields.map(([label, value]) => (
-                            <Fragment key={label}>
-                                <dt>{label}</dt>
-                                <dd>{value}</dd>
-                            </Fragment>
-                        ))}
-                    </dl>
+                    <Fields fields={fields} />
 
-                    {user.role === 'Admin' && (
+                    {user?.role === 'Admin' && (
                         <div className="card-actions">
                             <Link to={`/anime/${id}/edit`} className="button-link">Edit</Link>
                             <button className="danger" onClick={handleDelete}>Delete</button>

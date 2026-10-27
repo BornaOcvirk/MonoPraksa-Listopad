@@ -36,6 +36,10 @@ namespace PrvaWebAplikacija.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            // An admin deleting their own account would lock them out
+            if (Guid.TryParse(User.FindFirst("sub")?.Value, out var currentUserId) && currentUserId == id)
+                return BadRequest("Ne možete obrisati vlastiti račun.");
+
             var deleted = await _userService.DeleteAsync(id);
             if (deleted ==null) return NotFound();
             return NoContent();

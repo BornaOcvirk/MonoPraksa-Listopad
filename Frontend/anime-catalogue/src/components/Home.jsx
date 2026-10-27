@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { getCurrentUser, logout, searchAnime, getAnimeGenres, getStudios, deleteAnime } from './api'
+import { Link } from 'react-router-dom'
+import { getCurrentUser, searchAnime, getAnimeGenres, getStudios, deleteAnime } from './api'
 
 const PAGE_SIZE = 6
 
 function Home() {
     const user = getCurrentUser()
     const isAdmin = user?.role === 'Admin'
-    const navigate = useNavigate()
 
     const [search, setSearch] = useState('')
     const [author, setAuthor] = useState('')
@@ -44,15 +43,6 @@ function Home() {
         return () => { ignore = true }
     }, [search, author, genre, studioId, page, reloadKey])
 
-    if (!user) {
-        return <Navigate to="/login" replace />
-    }
-
-    function handleLogout() {
-        logout()
-        navigate('/login')
-    }
-
     function clearFilters() {
         setSearch('')
         setAuthor('')
@@ -77,17 +67,10 @@ function Home() {
     }
 
     return (
-        <div className="page">
-            <header className="header">
-                <h1>Anime Catalogue</h1>
-                <div className="header-actions">
-                    {isAdmin && (
-                        <Link to="/anime/new" className="button-link">+ Add anime</Link>
-                    )}
-                    <span>{user.username} ({user.role})</span>
-                    <button onClick={handleLogout}>Log out</button>
-                </div>
-            </header>
+        <main>
+            {isAdmin && (
+                <Link to="/anime/new" className="button-link primary">+ Add anime</Link>
+            )}
 
             <input
                 className="search-bar"
@@ -129,8 +112,10 @@ function Home() {
                     <div className="card" key={a.id}>
                         <h3><Link to={`/anime/${a.id}`}>{a.name}</Link></h3>
                         <p>{a.genre} · {a.numberOfSeasons} season(s)</p>
-                        <p>Studio: {a.studioName}</p>
-                        <p>{a.mangaTitle ? `Manga: ${a.mangaTitle} by ${a.author}` : 'Original anime (no manga)'}</p>
+                        <p>Studio: <Link to={`/studios/${a.studioId}`}>{a.studioName}</Link></p>
+                        <p>{a.mangaId
+                            ? <>Manga: <Link to={`/mangas/${a.mangaId}`}>{a.mangaTitle}</Link> by {a.author}</>
+                            : 'Original anime (no manga)'}</p>
                         <p>Released: {a.releaseDate}</p>
 
                         {isAdmin && (
@@ -152,7 +137,7 @@ function Home() {
                     Next →
                 </button>
             </div>
-        </div>
+        </main>
     )
 }
 

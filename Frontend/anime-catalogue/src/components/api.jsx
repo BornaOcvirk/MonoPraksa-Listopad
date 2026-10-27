@@ -28,9 +28,12 @@ async function request(path, { method = 'GET', body, query } = {}) {
     try { data = text ? JSON.parse(text) : null } catch { data = text }
 
     if (!res.ok) {
-        if (res.status === 401 && !text) throw new Error('You need to log in.')
-        if (res.status === 403) throw new Error('Only admins can do this.')
-        throw new Error(typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`)
+        let message = typeof data === 'string' && data ? data : data?.title || `Error ${res.status}`
+        if (res.status === 401 && !text) message = 'You need to log in.'
+        if (res.status === 403) message = 'Only admins can do this.'
+        const error = new Error(message)
+        error.status = res.status
+        throw error
     }
     return data
 }
@@ -70,5 +73,12 @@ export const createAnime = (anime)     => request(ANIME, { method: 'POST', body:
 export const updateAnime = (id, anime) => request(`${ANIME}/${id}`, { method: 'PUT', body: anime })
 export const deleteAnime = (id)        => request(`${ANIME}/${id}`, { method: 'DELETE' })
 
-export const getStudios = () => request('/api/Studio')
-export const getMangas  = () => request('/api/Manga')
+export const getStudios        = ()   => request('/api/Studio')
+export const getStudio         = (id) => request(`/api/Studio/${id}`)
+export const getMangas         = ()   => request('/api/Manga')
+export const getManga          = (id) => request(`/api/Manga/${id}`)
+export const getMangasByStudio = (id) => request(`/api/Manga/studio/${id}`)
+
+export const getUsers   = ()   => request('/api/User')
+export const deleteUser = (id) => request(`/api/User/${id}`, { method: 'DELETE' })
+export const getMe      = ()   => request('/api/Auth/me')

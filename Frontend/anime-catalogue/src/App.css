@@ -1,8 +1,29 @@
+/* Shared "comic panel" look for cards, forms and boxes */
+.auth-box,
+.card,
+.details,
+.anime-form {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 5px 5px 0 var(--shadow);
+}
+
+.error {
+    color: var(--danger);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ===== Auth ===== */
 .auth-box {
     max-width: 320px;
     margin: 80px auto;
     padding: 24px;
-    border: 2px solid black;
+}
+
+.auth-box h2 {
+    margin-top: 0;
 }
 
 .auth-box form {
@@ -13,20 +34,15 @@
 
 .auth-box input,
 .auth-box button {
-    padding: 8px;
+    padding: 8px 12px;
     font-size: 1rem;
-}
-
-.error {
-    color: red;
-    margin: 0;
 }
 
 /* ===== Home ===== */
 .page {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 20px 90px;
 }
 
 .header {
@@ -37,10 +53,32 @@
     gap: 10px;
 }
 
+/* Crimson-to-gold bar under the main title */
+.header h1::after {
+    content: '';
+    display: block;
+    height: 6px;
+    width: 60%;
+    margin-top: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.header-actions button {
+    padding: 6px 14px;
+}
+
 .search-bar {
     width: 100%;
     box-sizing: border-box;
-    padding: 12px;
+    padding: 12px 16px;
     font-size: 1.1rem;
     margin: 10px 0;
 }
@@ -56,88 +94,115 @@
 .filters input,
 .filters select,
 .filters button {
-    padding: 6px;
+    padding: 6px 12px;
     font-size: 1rem;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 18px;
 }
 
 .card {
-    border: 2px solid black;
     padding: 15px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--shadow);
 }
 
 .card h3 {
     margin-top: 0;
 }
-.pagination {
-    position: fixed;          
-    bottom: 0;                
-    left: 0;
-    right: 0;                 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    padding: 12px;
-    background: white;        
-    border-top: 2px solid black;
-}
 
-.pagination button {
-    padding: 6px 12px;
-    font-size: 1rem;
-    width: 120px;             
-}
-
-.pagination span {
-    width: 110px;             
-    text-align: center;
-}
-
-.page {
-    padding-bottom: 80px;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.button-link {
-    display: inline-block;
-    padding: 6px 12px;
-    border: 2px solid black;
-    background: #f0f0f0;
-    color: black;
+.card h3 a {
+    color: inherit;
     text-decoration: none;
+}
+
+.card h3 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+}
+
+.card p {
+    margin: 4px 0;
 }
 
 .card-actions {
     display: flex;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 12px;
+}
+
+.button-link {
+    display: inline-block;
+    padding: 6px 14px;
+    text-decoration: none;
 }
 
 .danger {
-    padding: 6px 12px;
-    border: none;
-    background: #c0392b;
-    color: white;
-    cursor: pointer;
+    padding: 6px 14px;
+    color: var(--danger);
+    border-color: var(--danger);
 }
 
+.danger:hover:not(:disabled) {
+    color: var(--surface);
+    background: var(--danger);
+}
+
+.pagination {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: var(--surface);
+    border-top: 2px solid var(--border);
+}
+
+.pagination button {
+    padding: 6px 12px;
+    font-size: 1rem;
+    width: 120px;
+}
+
+.pagination span {
+    width: 110px;
+    text-align: center;
+    font-weight: 700;
+}
+
+@media (max-width: 420px) {
+    .pagination {
+        gap: 8px;
+    }
+
+    .pagination button {
+        width: 100px;
+    }
+
+    .pagination span {
+        width: auto;
+    }
+}
+
+/* ===== Add / edit form ===== */
 .anime-form {
     display: flex;
     flex-direction: column;
     gap: 12px;
     max-width: 420px;
+    padding: 20px;
 }
 
 .anime-form label {
@@ -149,7 +214,7 @@
 
 .anime-form input,
 .anime-form select {
-    padding: 8px;
+    padding: 8px 12px;
     font-size: 1rem;
     font-weight: normal;
 }
@@ -165,15 +230,10 @@
 }
 
 /* ===== Anime details ===== */
-.card h3 a {
-    color: inherit;
-}
-
 .details {
     max-width: 600px;
     margin-top: 15px;
     padding: 20px;
-    border: 2px solid black;
 }
 
 .details h1 {
@@ -188,6 +248,7 @@
 
 .details dt {
     font-weight: bold;
+    color: var(--text-muted);
 }
 
 .details dd {
@@ -203,4 +264,61 @@
     .details dd {
         margin-bottom: 8px;
     }
+}
+
+/* Related anime / manga lists on studio and manga pages */
+.details h2 {
+    font-size: 1.2rem;
+    margin: 20px 0 6px;
+}
+
+.link-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.link-list li {
+    margin: 4px 0;
+}
+
+/* ===== Main navigation ===== */
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+}
+
+.nav a {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 2px 0;
+    border-bottom: 3px solid transparent;
+}
+
+.nav a:hover,
+.nav a.active {
+    border-bottom-color: var(--accent);
+}
+
+/* ===== Users table ===== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 2px solid var(--border);
+}
+
+.table th,
+.table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+}
+
+.table th {
+    color: var(--text-muted);
 }

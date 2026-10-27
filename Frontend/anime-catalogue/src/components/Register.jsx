@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { register } from './api'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { getCurrentUser, register } from './api'
 
 function Register() {
     const [username, setUsername] = useState('')
@@ -9,6 +9,11 @@ function Register() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+
+    // Already logged in: skip the form and go to the catalogue
+    if (getCurrentUser()) {
+        return <Navigate to="/" replace />
+    }
 
     async function handleSubmit(e) {
         e.preventDefault()

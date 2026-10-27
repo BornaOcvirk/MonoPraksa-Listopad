@@ -30,7 +30,7 @@ function EditAnime() {
     }
 
     return (
-        <div className="page">
+        <main>
             <h1>Edit anime</h1>
 
             {error && <p className="error">{error}</p>}
@@ -44,7 +44,7 @@ function EditAnime() {
                     onCancel={() => navigate('/')}
                 />
             )}
-        </div>
+        </main>
     )
 }
 
