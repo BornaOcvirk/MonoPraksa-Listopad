@@ -4,6 +4,7 @@ import Register from './components/Register'
 import Home from './components/Home'
 import AddAnime from './components/AddAnime'
 import EditAnime from './components/EditAnime'
+import AnimeDetails from './components/AnimeDetails'
 import AdminRoute from './components/AdminRoute'
 import './App.css'
 
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/anime/new" element={<AdminRoute><AddAnime /></AdminRoute>} />
+                <Route path="/anime/:id" element={<AnimeDetails />} />
                 <Route path="/anime/:id/edit" element={<AdminRoute><EditAnime /></AdminRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
