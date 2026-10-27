@@ -84,7 +84,7 @@ To add a feature, touch every layer: the model, the repository interface and imp
 
 - JWTs are issued by `Auth/TokenService` with the short claim names `sub`, `name` and `role`. `MapInboundClaims = false`, so read claims by these names, not by `ClaimTypes.*`.
 - Roles are defined in `Common/Roles.cs` (`Admin`, `Customer`). Controllers use `[Authorize(Roles = Roles.Admin)]` at class level, and read endpoints opt out with `[AllowAnonymous]`.
-- Registration always creates a `Customer`. Admins can only be created in the database (the SQL seed includes the admin `borna`).
+- Registration always creates a `Customer`. An existing admin can promote a customer with `PUT api/User/{id}/make-admin` (Users page → "Make admin"); the first admin comes from the SQL seed (`borna`). A promoted user must log in again to get a token with the new role.
 - Passwords are hashed with ASP.NET Identity's `PasswordHasher<User>`.
 - The frontend stores `token` and `user` in `localStorage`. `AdminRoute` hides admin pages in the UI only; the API enforces the role.
 

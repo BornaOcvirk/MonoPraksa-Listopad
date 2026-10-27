@@ -13,5 +13,6 @@ namespace PrvaWebAplikacija.Repository.Common
         Task<bool> DoesUserExist(string username);
         Task<User> AddAsync(User user);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> UpdateRoleAsync(Guid id, string role);
     }
 }

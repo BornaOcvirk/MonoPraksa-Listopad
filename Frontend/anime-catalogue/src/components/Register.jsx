@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getCurrentUser, register } from './api'
 
+const MIN_PASSWORD_LENGTH = 8
+
 function Register() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -18,6 +20,11 @@ function Register() {
     async function handleSubmit(e) {
         e.preventDefault()
         setError('')
+
+        if (password.length < MIN_PASSWORD_LENGTH) {
+            setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
+            return
+        }
 
         if (password !== confirmPassword) {
             setError('Passwords do not match.')
@@ -47,7 +54,8 @@ function Register() {
                 />
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={`Password (min. ${MIN_PASSWORD_LENGTH} characters)`}
+                    minLength={MIN_PASSWORD_LENGTH}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required

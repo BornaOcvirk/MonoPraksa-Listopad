@@ -82,4 +82,5 @@ export const createManga       = (manga) => request('/api/Manga', { method: 'POS
 
 export const getUsers   = ()   => request('/api/User')
 export const deleteUser = (id) => request(`/api/User/${id}`, { method: 'DELETE' })
+export const makeAdmin  = (id) => request(`/api/User/${id}/make-admin`, { method: 'PUT' })
 export const getMe      = ()   => request('/api/Auth/me')

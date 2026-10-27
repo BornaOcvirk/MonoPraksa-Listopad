@@ -12,5 +12,6 @@ namespace PrvaWebAplikacija.Service.Common
         Task<UserDto?> CreateAsync(CreateUserDto createUserDto);
         Task<UserDto?> LoginAsync(UserLoginDto userLoginDto);
         Task<UserDto?> DeleteAsync(Guid id);
+        Task<UserDto> MakeAdminAsync(Guid id);
     }
 }

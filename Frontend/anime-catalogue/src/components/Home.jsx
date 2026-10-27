@@ -109,7 +109,7 @@ function Home() {
 
             <div className="grid">
                 {animes.map(a => (
-                    <div className="card" key={a.id}>
+                    <div className="card anime-card" key={a.id}>
                         <h3><Link to={`/anime/${a.id}`}>{a.name}</Link></h3>
                         <p>{a.genre} · {a.numberOfSeasons} season(s)</p>
                         <p>Studio: <Link to={`/studios/${a.studioId}`}>{a.studioName}</Link></p>

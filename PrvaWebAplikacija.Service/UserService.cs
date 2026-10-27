@@ -12,6 +12,7 @@ namespace PrvaWebAplikacija.Service
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private const int MinPasswordLength = 8;
 
         public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
         {
@@ -34,6 +35,10 @@ namespace PrvaWebAplikacija.Service
 
         public async Task<UserDto?> CreateAsync(CreateUserDto dto)
         {
+            // Only checked on register, so existing users with shorter passwords can still log in
+            if (string.IsNullOrEmpty(dto.Password) || dto.Password.Length < MinPasswordLength)
+                throw new BusinessRuleException($"Password must be at least {MinPasswordLength} characters.");
+
             var username = dto.Username.Trim();
 
             if (await _userRepository.DoesUserExist(username))
@@ -70,6 +75,22 @@ namespace PrvaWebAplikacija.Service
 
             var deleted = await _userRepository.DeleteAsync(id);
             return deleted ? ToDto(user) : null;
+        }
+
+        public async Task<UserDto> MakeAdminAsync(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                throw new NotFoundException("Korisnik ne postoji.");
+
+            if (user.Role == Roles.Admin)
+                throw new BusinessRuleException("Korisnik je već administrator.");
+
+            if (!await _userRepository.UpdateRoleAsync(id, Roles.Admin))
+                throw new NotFoundException("Korisnik ne postoji.");
+
+            user.Role = Roles.Admin;
+            return ToDto(user);
         }
 
         private static UserDto ToDto(User user) => new UserDto

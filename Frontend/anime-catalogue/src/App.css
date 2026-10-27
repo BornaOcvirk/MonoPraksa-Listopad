@@ -133,6 +133,21 @@
     margin: 4px 0;
 }
 
+/* Anime cards: push Edit/Delete to the bottom so they line up across a row */
+.anime-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.anime-card p {
+    margin: 2px 0; /* flex items don't collapse margins; keeps the same 4px gap as before */
+}
+
+.anime-card .card-actions {
+    margin-top: auto;
+    padding-top: 12px;
+}
+
 .card-actions {
     display: flex;
     gap: 8px;
@@ -343,4 +358,14 @@
 
 .table th {
     color: var(--text-muted);
+}
+
+.row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row-actions button {
+    padding: 6px 14px;
 }

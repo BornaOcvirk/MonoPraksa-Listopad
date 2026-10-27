@@ -32,6 +32,14 @@ namespace PrvaWebAplikacija.Controllers
             return Ok(await _userService.GetUserByIdAsync(id));
         }
 
+        // PUT api/user/{id}/make-admin — promote a customer to admin.
+        // Their current token still says Customer until they log in again.
+        [HttpPut("{id:guid}/make-admin")]
+        public async Task<IActionResult> MakeAdmin(Guid id)
+        {
+            return Ok(await _userService.MakeAdminAsync(id));
+        }
+
         // DELETE api/user/{id}
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
