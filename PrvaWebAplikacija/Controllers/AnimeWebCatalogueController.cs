@@ -58,14 +58,6 @@ namespace PrvaWebAplikacija.Controllers
             return await _service.GetByAuthorAsync(author);
         }
 
-        // GET api/AnimeWebCatalogue/{guid}/price
-        [HttpGet("{id:guid}/price")]
-        [AllowAnonymous]
-        public async Task<ActionResult<decimal>> GetFinalPrice(Guid id)
-        {
-            return await _service.GetFinalPriceAsync(id);
-        }
-
         // POST api/AnimeWebCatalogue
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AnimeWebCatalogue new_anime)

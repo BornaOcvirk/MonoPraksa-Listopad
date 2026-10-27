@@ -90,7 +90,6 @@ To add a feature, touch every layer: the model, the repository interface and imp
 
 ### Other services
 
-- `PriceCalculator` adds 25% VAT (`ShopConstants.Pdv`) for the `/price` endpoint.
 - `IdGenerator` (a singleton) creates GUID v7 IDs for new anime. Other tables use database-side `gen_random_uuid()` defaults.
 
 ## Notes

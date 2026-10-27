@@ -49,5 +49,12 @@ namespace PrvaWebAplikacija.Controllers
         {
             return await _service.GetByStudioAsync(studioId);
         }
+
+        // POST api/Manga (admin only, from the class-level Authorize)
+        [HttpPost]
+        public async Task<ActionResult<Manga>> Post([FromBody] CreateMangaDto dto)
+        {
+            return Ok(await _service.AddAsync(dto));
+        }
     }
 }

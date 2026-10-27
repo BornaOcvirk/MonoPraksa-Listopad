@@ -17,5 +17,6 @@ namespace PrvaWebAplikacija.Repository.Common
         Task<Manga?> DeleteAsync(Guid id);
         Task<List<Manga>> GetByAuthorAsync(string author);
         Task<List<Manga>> GetByStudioAsync(Guid studioId);
+        Task<bool> StudioExistsAsync(Guid studioId);
     }
 }

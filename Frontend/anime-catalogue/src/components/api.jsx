@@ -78,6 +78,7 @@ export const getStudio         = (id) => request(`/api/Studio/${id}`)
 export const getMangas         = ()   => request('/api/Manga')
 export const getManga          = (id) => request(`/api/Manga/${id}`)
 export const getMangasByStudio = (id) => request(`/api/Manga/studio/${id}`)
+export const createManga       = (manga) => request('/api/Manga', { method: 'POST', body: manga })
 
 export const getUsers   = ()   => request('/api/User')
 export const deleteUser = (id) => request(`/api/User/${id}`, { method: 'DELETE' })

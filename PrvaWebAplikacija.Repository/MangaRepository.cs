@@ -79,5 +79,10 @@ namespace PrvaWebAplikacija.Repository
                 .ToListAsync();
         }
 
+        public async Task<bool> StudioExistsAsync(Guid studioId)
+        {
+            return await _context.Studios.AnyAsync(s => s.StudioId == studioId);
+        }
+
     }
 }

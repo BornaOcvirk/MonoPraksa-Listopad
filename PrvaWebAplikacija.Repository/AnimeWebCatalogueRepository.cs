@@ -22,7 +22,6 @@ namespace PrvaWebAplikacija.Repository
             Name = a.Title,
             Genre = a.Genre ?? string.Empty,
             NumberOfSeasons = a.NumberOfSeasons ?? 0,
-            Price = a.Price ?? 0m,
             ReleaseDate = a.ReleseDate,
             StudioId = a.StudioId,
             MangaId = a.MangaId,
@@ -82,7 +81,6 @@ namespace PrvaWebAplikacija.Repository
                 Title = anime.Name,
                 Genre = anime.Genre,
                 NumberOfSeasons = anime.NumberOfSeasons,
-                Price = anime.Price,
                 ReleseDate = anime.ReleaseDate,
                 StudioId = anime.StudioId,
                 MangaId = anime.MangaId,
@@ -102,7 +100,6 @@ namespace PrvaWebAplikacija.Repository
             entity.Title = anime.Name;
             entity.Genre = anime.Genre;
             entity.NumberOfSeasons = anime.NumberOfSeasons;
-            entity.Price = anime.Price;
             entity.ReleseDate = anime.ReleaseDate;
             entity.StudioId = anime.StudioId;
             entity.MangaId = anime.MangaId;

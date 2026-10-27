@@ -15,7 +15,6 @@ namespace PrvaWebAplikacija.Service.Common
         Task<AnimeWebCatalogue> AddAsync(AnimeWebCatalogue anime);
         Task<bool> UpdateAsync(Guid id, AnimeWebCatalogue anime);
         Task<bool> DeleteAsync(Guid id);
-        Task<decimal> GetFinalPriceAsync(Guid id);
         Task<PagedResult<AnimeWebCatalogue>> SearchAsync(AnimeCatalogueQuery query);
         Task<List<string>> GetGenresAsync();
     }

@@ -45,7 +45,6 @@ function AnimeDetails() {
     const fields = anime && [
         ['Genre', anime.genre],
         ['Seasons', anime.numberOfSeasons],
-        ['Price', Number(anime.price).toFixed(2)],
         ['Released', anime.releaseDate],
         ['Studio', <Link to={`/studios/${anime.studioId}`}>{anime.studioName ?? 'View studio'}</Link>],
         ['Popularity', anime.popularity],

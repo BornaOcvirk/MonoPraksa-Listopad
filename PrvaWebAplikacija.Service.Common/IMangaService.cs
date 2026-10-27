@@ -12,5 +12,6 @@ namespace PrvaWebAplikacija.Service.Common
         Task<Manga> GetByIdAsync(Guid id);
         Task<List<Manga>> GetByAuthorAsync(string author);
         Task<List<Manga>> GetByStudioAsync(Guid studioId);
+        Task<Manga> AddAsync(CreateMangaDto dto);
     }
 }

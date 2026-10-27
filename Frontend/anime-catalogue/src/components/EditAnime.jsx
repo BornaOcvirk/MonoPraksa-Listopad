@@ -15,7 +15,6 @@ function EditAnime() {
                 name: a.name,
                 genre: a.genre,
                 numberOfSeasons: a.numberOfSeasons,
-                price: a.price,
                 releaseDate: a.releaseDate,
                 studioId: a.studioId,
                 mangaId: a.mangaId ?? '',

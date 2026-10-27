@@ -6,7 +6,6 @@
         public string Name { get; set; } = string.Empty;
         public string Genre { get; set; } = string.Empty;
         public int NumberOfSeasons { get; set; }
-        public decimal Price { get; set; }
         public DateOnly ReleaseDate { get; set; }
         public Guid StudioId { get; set; }
         public Guid? MangaId { get; set; }

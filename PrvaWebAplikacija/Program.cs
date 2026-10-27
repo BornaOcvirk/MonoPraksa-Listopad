@@ -56,7 +56,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
-builder.Services.AddTransient<IPriceCalculator, PriceCalculator>();
 builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
 
 

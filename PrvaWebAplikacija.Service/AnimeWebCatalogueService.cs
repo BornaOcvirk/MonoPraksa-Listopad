@@ -12,18 +12,15 @@ namespace PrvaWebAplikacija.Service
     {
         private readonly IAnimeWebCatalogueRepository _repository;
         private readonly IIdGenerator _idGenerator;
-        private readonly IPriceCalculator _priceCalculator;
 
         public Guid InstanceId { get; } = Guid.NewGuid();
 
         public AnimeWebCatalogueService(
             IAnimeWebCatalogueRepository repository,
-            IIdGenerator idGenerator,
-            IPriceCalculator priceCalculator)
+            IIdGenerator idGenerator)
         {
             _repository = repository;
             _idGenerator = idGenerator;
-            _priceCalculator = priceCalculator;
         }
 
         public async Task<List<AnimeWebCatalogue>> GetAllAsync()
@@ -75,15 +72,6 @@ namespace PrvaWebAplikacija.Service
             return await _repository.DeleteAsync(id);
         }
 
-        public async Task<decimal> GetFinalPriceAsync(Guid id)
-        {
-            var anime = await _repository.GetByIdAsync(id);
-            if (anime == null)
-                throw new NotFoundException("Anime ne postoji.");
-
-            return _priceCalculator.CalculateFinalPrice(anime.Price);
-        }
-
         public async Task<PagedResult<AnimeWebCatalogue>> SearchAsync(AnimeCatalogueQuery query)
         {
             // Keep paging within safe limits
@@ -106,9 +94,6 @@ namespace PrvaWebAplikacija.Service
 
             if (string.IsNullOrWhiteSpace(anime.Name))
                 throw new BusinessRuleException("Anime mora imati naziv.");
-
-            if (anime.Price <= 0)
-                throw new BusinessRuleException("Cijena mora biti veća od 0.");
 
             if (anime.NumberOfSeasons < 0)
                 throw new BusinessRuleException("Broj sezona ne može biti negativan.");
