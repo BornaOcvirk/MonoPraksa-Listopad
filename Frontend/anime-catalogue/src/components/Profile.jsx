@@ -13,18 +13,10 @@ function Profile() {
         let ignore = false
         getMe()
             .then(result => { if (!ignore) setMe(result) })
-            .catch(err => {
-                if (ignore) return
-                // Token expired or invalid: clear the session and send the user to log in again
-                if (err.status === 401) {
-                    logout()
-                    navigate('/login', { replace: true })
-                } else {
-                    setError(err.message)
-                }
-            })
+            // A 401 is already handled in request(): it logs out and redirects to /login
+            .catch(err => { if (!ignore) setError(err.message) })
         return () => { ignore = true }
-    }, [navigate])
+    }, [])
 
     function handleLogout() {
         logout()

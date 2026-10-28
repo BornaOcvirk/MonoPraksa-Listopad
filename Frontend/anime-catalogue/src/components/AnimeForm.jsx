@@ -89,12 +89,12 @@ function AnimeForm({ initialValues = EMPTY_ANIME, submitLabel, onSubmit, onCance
 
             <label>
                 Number of seasons
-                <input name="numberOfSeasons" type="number" min="0" value={values.numberOfSeasons} onChange={handleChange} required />
+                <input name="numberOfSeasons" type="number" min="0" max="100" value={values.numberOfSeasons} onChange={handleChange} required />
             </label>
 
             <label>
                 Release date
-                <input name="releaseDate" type="date" value={values.releaseDate} onChange={handleChange} required />
+                <input name="releaseDate" type="date" min="1900-01-01" max="2100-12-31" value={values.releaseDate} onChange={handleChange} required />
             </label>
 
             <label>

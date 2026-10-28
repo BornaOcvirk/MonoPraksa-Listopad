@@ -15,7 +15,8 @@ function Home() {
     const author = params.get('author') ?? ''
     const genre = params.get('genre') ?? ''
     const studioId = params.get('studio') ?? ''
-    const page = Math.max(Math.floor(Number(params.get('page'))) || 1, 1) // ignores junk like ?page=abc or -3
+    // Ignores junk like ?page=abc or -3; capped at the API's max so huge values still reach the "jump to last page" logic
+    const page = Math.min(Math.max(Math.floor(Number(params.get('page'))) || 1, 1), 100000)
 
     // What the user is typing; only sent to the API when they press Search or Enter
     const [searchInput, setSearchInput] = useState(search)
@@ -78,7 +79,11 @@ function Home() {
                 setTotalPages(Math.max(result.totalPages, 1))
                 setError('')
             })
-            .catch(err => { if (!ignore) setError(err.message) })
+            .catch(err => {
+                if (ignore) return
+                setAnimes(null) // don't leave the previous page's cards under the error
+                setError(err.message)
+            })
 
         return () => { ignore = true }
     }, [search, author, genre, studioId, page, reloadKey, setParams])
