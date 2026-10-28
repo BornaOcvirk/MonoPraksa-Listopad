@@ -3,6 +3,7 @@ import { getManga, getStudio, searchAnime } from './api'
 import useLoad from './useLoad'
 import Fields from './Fields'
 import LinkList from './LinkList'
+import { SkeletonDetails } from './Skeleton'
 
 // Manga info plus its studio and anime adaptations
 async function loadManga(id) {
@@ -22,7 +23,7 @@ function MangaDetails() {
         <main>
             <Link to="/mangas">← Back to mangas</Link>
             {error && <p className="error">{error}</p>}
-            {!data && !error && <p>Loading...</p>}
+            {!data && !error && <SkeletonDetails rows={5} />}
 
             {data && (
                 <article className="details">

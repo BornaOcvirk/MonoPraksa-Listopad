@@ -320,6 +320,7 @@
 
 /* ===== Main navigation ===== */
 .nav {
+    position: relative; /* the gold bar is positioned inside the nav */
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
@@ -328,13 +329,39 @@
 .nav a {
     font-weight: 700;
     text-decoration: none;
-    padding: 2px 0;
-    border-bottom: 3px solid transparent;
+    padding: 2px 0 5px;
 }
 
-.nav a:hover,
-.nav a.active {
-    border-bottom-color: var(--accent);
+/* One gold bar shared by all links. Layout.jsx sets left/right/top.
+   The edge in front moves first and the back edge follows a moment later,
+   so the bar stretches toward the new link and then shrinks onto it. */
+.nav-bar {
+    position: absolute;
+    left: 0;
+    right: 100%;
+    top: 0;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        left 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+        right 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+        top 0.35s ease,
+        opacity 0.2s ease;
+}
+
+.nav-bar.visible {
+    opacity: 1;
+}
+
+.nav-bar[data-dir='right'] {
+    transition-delay: 0.1s, 0s, 0s, 0s; /* right edge leads */
+}
+
+.nav-bar[data-dir='left'] {
+    transition-delay: 0s, 0.1s, 0s, 0s; /* left edge leads */
 }
 
 /* ===== Users table ===== */
@@ -368,4 +395,64 @@
 
 .row-actions button {
     padding: 6px 14px;
+}
+
+/* ===== Loading "ghost" placeholders (Skeleton.jsx) ===== */
+.ghost-bar {
+    display: block;
+    height: 0.9rem;
+    margin: 10px 0;
+    border-radius: 999px;
+    background: var(--text-muted);
+    opacity: 0.22;
+    animation: ghost-pulse 1.4s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+
+.ghost-bar.title {
+    height: 1.5rem;
+    margin: 0 0 14px;
+}
+
+.ghost-bar.field {
+    height: 2.4rem;
+    margin-top: 4px;
+    border-radius: var(--radius);
+}
+
+.ghost-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 20px;
+}
+
+.ghost-row .ghost-bar {
+    margin: 8px 0;
+}
+
+/* Ghost cards shouldn't lift on hover like real ones */
+.card.ghost:hover {
+    transform: none;
+    box-shadow: 5px 5px 0 var(--shadow);
+}
+
+@keyframes ghost-pulse {
+    0%, 100% { opacity: 0.22; }
+    50% { opacity: 0.08; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ghost-bar {
+        animation: none;
+    }
+}
+
+/* Text only screen readers see */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }

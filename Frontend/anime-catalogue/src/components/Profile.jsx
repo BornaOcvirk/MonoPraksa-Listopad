@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getMe, logout } from './api'
 import Fields from './Fields'
+import { SkeletonDetails } from './Skeleton'
 
 function Profile() {
     const navigate = useNavigate()
@@ -33,7 +34,7 @@ function Profile() {
     return (
         <main>
             {error && <p className="error">{error}</p>}
-            {!me && !error && <p>Loading...</p>}
+            {!me && !error && <SkeletonDetails rows={3} />}
 
             {me && (
                 <article className="details">

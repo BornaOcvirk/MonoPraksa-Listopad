@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCurrentUser, searchAnime, getAnimeGenres, getStudios, deleteAnime } from './api'
+import { SkeletonCards } from './Skeleton'
 
 const PAGE_SIZE = 6
 
@@ -15,7 +16,7 @@ function Home() {
     const [page, setPage] = useState(1)
     const [reloadKey, setReloadKey] = useState(0)
 
-    const [animes, setAnimes] = useState([])
+    const [animes, setAnimes] = useState(null) // null until the first search finishes
     const [totalCount, setTotalCount] = useState(0)
     const [totalPages, setTotalPages] = useState(1)
     const [genres, setGenres] = useState([])
@@ -105,10 +106,12 @@ function Home() {
             </div>
 
             {error && <p className="error">{error}</p>}
-            <p>{totalCount} anime found</p>
+            <p>{animes ? `${totalCount} anime found` : 'Loading anime...'}</p>
+
+            {!animes && !error && <SkeletonCards count={PAGE_SIZE} lines={4} />}
 
             <div className="grid">
-                {animes.map(a => (
+                {animes?.map(a => (
                     <div className="card anime-card" key={a.id}>
                         <h3><Link to={`/anime/${a.id}`}>{a.name}</Link></h3>
                         <p>{a.genre} · {a.numberOfSeasons} season(s)</p>

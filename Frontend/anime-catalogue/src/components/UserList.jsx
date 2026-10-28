@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { getCurrentUser, getUsers, deleteUser, makeAdmin } from './api'
 import useLoad from './useLoad'
+import { SkeletonTable } from './Skeleton'
 
 // Admin only (wrapped in AdminRoute in App.jsx)
 function UserList() {
@@ -41,7 +42,7 @@ function UserList() {
         <main>
             <h2>Users</h2>
             {(error || loadError) && <p className="error">{error || loadError}</p>}
-            {!users && !loadError && <p>Loading...</p>}
+            {!users && !loadError && <SkeletonTable headers={['Username', 'Role', 'Actions']} />}
 
             {users && (
                 <div className="table-wrap">

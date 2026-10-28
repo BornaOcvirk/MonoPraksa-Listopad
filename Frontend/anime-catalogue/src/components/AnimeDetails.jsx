@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getCurrentUser, getAnime, getStudios, getMangas, deleteAnime } from './api'
 import Fields from './Fields'
+import { SkeletonDetails } from './Skeleton'
 
 // Loads one anime. If the endpoint only returns ids, look up the studio and manga names.
 async function loadAnime(id) {
@@ -58,7 +59,7 @@ function AnimeDetails() {
             <Link to="/">← Back to catalogue</Link>
 
             {error && <p className="error">{error}</p>}
-            {!anime && !error && <p>Loading...</p>}
+            {!anime && !error && <SkeletonDetails rows={6} />}
 
             {anime && (
                 <article className="details">

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getMangas } from './api'
 import useLoad from './useLoad'
+import { SkeletonCards } from './Skeleton'
 
 function MangaList() {
     const { data: mangas, error } = useLoad(getMangas)
@@ -9,7 +10,7 @@ function MangaList() {
         <main>
             <h2>Mangas</h2>
             {error && <p className="error">{error}</p>}
-            {!mangas && !error && <p>Loading...</p>}
+            {!mangas && !error && <SkeletonCards lines={3} />}
             {mangas?.length === 0 && <p>No mangas yet.</p>}
 
             <div className="grid">

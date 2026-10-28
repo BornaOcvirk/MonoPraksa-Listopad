@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getStudios } from './api'
 import useLoad from './useLoad'
+import { SkeletonCards } from './Skeleton'
 
 function StudioList() {
     const { data: studios, error } = useLoad(getStudios)
@@ -9,7 +10,7 @@ function StudioList() {
         <main>
             <h2>Studios</h2>
             {error && <p className="error">{error}</p>}
-            {!studios && !error && <p>Loading...</p>}
+            {!studios && !error && <SkeletonCards lines={2} />}
             {studios?.length === 0 && <p>No studios yet.</p>}
 
             <div className="grid">

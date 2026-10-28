@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AnimeForm from './AnimeForm'
+import { SkeletonForm } from './Skeleton'
 import { getAnime, updateAnime } from './api'
 
 function EditAnime() {
@@ -33,7 +34,7 @@ function EditAnime() {
             <h1>Edit anime</h1>
 
             {error && <p className="error">{error}</p>}
-            {!anime && !error && <p>Loading...</p>}
+            {!anime && !error && <SkeletonForm fields={7} />}
 
             {anime && (
                 <AnimeForm
