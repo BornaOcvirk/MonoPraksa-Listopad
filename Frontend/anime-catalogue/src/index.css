@@ -42,6 +42,7 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   line-height: 1.5;
+  overflow-wrap: break-word; /* breaks very long words (e.g. "nnnnnnnn...") instead of letting them poke out of cards */
 }
 
 h1, h2, h3 {
