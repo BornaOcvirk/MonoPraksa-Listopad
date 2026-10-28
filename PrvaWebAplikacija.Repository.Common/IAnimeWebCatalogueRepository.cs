@@ -11,9 +11,10 @@ namespace PrvaWebAplikacija.Repository.Common
         Task<AnimeWebCatalogue?> GetByIdAsync(Guid id);
         Task<List<AnimeWebCatalogue>> GetByGenreAsync(string genre, int minSeasons);
         Task<List<AnimeWebCatalogue>> GetByAuthorAsync(string author);
-        Task AddAsync(AnimeWebCatalogue anime);
-        Task<bool> UpdateAsync(Guid id, AnimeWebCatalogue anime);
+        Task AddAsync(AnimeWebCatalogue anime, Manga? newManga = null);
+        Task<bool> UpdateAsync(Guid id, AnimeWebCatalogue anime, Manga? newManga = null);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> AnimeExistsAsync(string title, DateOnly releaseDate, Guid? excludeId);
         Task<bool> StudioExistsAsync(Guid studioId);
         Task<bool> MangaExistsAsync(Guid mangaId);
         Task<PagedResult<AnimeWebCatalogue>> SearchAsync(AnimeCatalogueQuery query);

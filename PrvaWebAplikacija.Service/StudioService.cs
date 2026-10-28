@@ -26,7 +26,7 @@ namespace PrvaWebAplikacija.Service
         {
             var studio = await _studioRepository.GetStudioByIdAsync(id);
             if (studio == null)
-                throw new NotFoundException("Studio ne postoji.");
+                throw new NotFoundException("Studio not found.");
             return studio;
         }
 

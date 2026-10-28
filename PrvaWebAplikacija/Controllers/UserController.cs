@@ -46,10 +46,10 @@ namespace PrvaWebAplikacija.Controllers
         {
             // An admin deleting their own account would lock them out
             if (Guid.TryParse(User.FindFirst("sub")?.Value, out var currentUserId) && currentUserId == id)
-                return BadRequest("Ne možete obrisati vlastiti račun.");
+                return BadRequest("You can't delete your own account.");
 
-            var deleted = await _userService.DeleteAsync(id);
-            if (deleted ==null) return NotFound();
+            // Throws NotFound (404) or BusinessRule (400, e.g. the user is an admin)
+            await _userService.DeleteAsync(id);
             return NoContent();
         }
     }

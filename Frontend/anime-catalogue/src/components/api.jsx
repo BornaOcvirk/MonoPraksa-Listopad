@@ -44,6 +44,8 @@ async function request(path, { method = 'GET', body, query } = {}) {
         const validationMessage = Object.values(data?.errors ?? {}).flat()[0]
         let message = typeof data === 'string' && data ? data : validationMessage || data?.title || `Error ${res.status}`
         if (res.status === 401 && !text) message = 'You need to log in.'
+        // Empty 404 = the URL didn't match a route, e.g. a mistyped id like /anime/abc
+        if (res.status === 404 && !text) message = "This page doesn't exist or was deleted."
         if (res.status === 403) message = 'Only admins can do this.'
         const error = new Error(message)
         error.status = res.status

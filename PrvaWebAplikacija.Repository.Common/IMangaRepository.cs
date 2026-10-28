@@ -18,5 +18,6 @@ namespace PrvaWebAplikacija.Repository.Common
         Task<List<Manga>> GetByAuthorAsync(string author);
         Task<List<Manga>> GetByStudioAsync(Guid studioId);
         Task<bool> StudioExistsAsync(Guid studioId);
+        Task<bool> MangaExistsAsync(string title, string author);
     }
 }

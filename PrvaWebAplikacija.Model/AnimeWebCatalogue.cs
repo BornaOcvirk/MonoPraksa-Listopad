@@ -1,4 +1,6 @@
-﻿namespace PrvaWebAplikacija.Model
+﻿using System.Text.Json.Serialization;
+
+namespace PrvaWebAplikacija.Model
 {
     public class AnimeWebCatalogue
     {
@@ -13,5 +15,10 @@
         public string? StudioName { get; set; }
         public string? MangaTitle { get; set; }
         public string? Author { get; set; }
+
+        // Only on create/update: a manga to add together with this anime (replaces MangaId).
+        // It belongs to the anime's studio, so its StudioId is ignored.
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public CreateMangaDto? NewManga { get; set; }
     }
 }

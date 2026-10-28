@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getStudios, getMangas, getAnimeGenres, createManga } from './api'
+import { getStudios, getMangas, getAnimeGenres } from './api'
 
 const POPULARITY_OPTIONS = ['Very high', 'High', 'Medium', 'Low']
 
@@ -42,38 +42,28 @@ function AnimeForm({ initialValues = EMPTY_ANIME, submitLabel, onSubmit, onCance
         setNewManga(m => ({ ...m, [name]: value }))
     }
 
-    // Creates the new manga and returns its id. The manga belongs to the studio picked for the anime.
-    async function saveNewManga() {
-        const created = await createManga({
-            title: (newManga.title.trim() || values.name).trim(),
-            author: newManga.author.trim(),
-            volumes: Number(newManga.volumes),
-            popularity: newManga.popularity || null,
-            studioId: values.studioId,
-        })
-        if (!created?.mangaId) throw new Error('The manga could not be created.')
-
-        // Select it in the dropdown, so retrying after a failed anime save doesn't create it twice
-        setMangas(list => [...list, created])
-        setValues(v => ({ ...v, mangaId: created.mangaId }))
-        setNewManga(EMPTY_MANGA)
-        return created.mangaId
-    }
-
     async function handleSubmit(e) {
         e.preventDefault()
         setError('')
         setSaving(true)
         try {
-            const mangaId = values.mangaId === NEW_MANGA ? await saveNewManga() : values.mangaId || null
+            const addingManga = values.mangaId === NEW_MANGA
 
+            // A new manga is sent with the anime and saved in the same request (it belongs to the
+            // anime's studio), so a failed save never leaves a manga without its anime
             await onSubmit({
                 name: values.name.trim(),
                 genre: values.genre.trim(),
                 numberOfSeasons: Number(values.numberOfSeasons),
                 releaseDate: values.releaseDate,
                 studioId: values.studioId,
-                mangaId,
+                mangaId: addingManga ? null : values.mangaId || null,
+                newManga: addingManga ? {
+                    title: newManga.title.trim() || values.name.trim(),
+                    author: newManga.author.trim(),
+                    volumes: Number(newManga.volumes),
+                    popularity: newManga.popularity || null,
+                } : null,
                 popularity: values.popularity || null,
             })
         } catch (err) {
@@ -86,12 +76,12 @@ function AnimeForm({ initialValues = EMPTY_ANIME, submitLabel, onSubmit, onCance
         <form className="anime-form" onSubmit={handleSubmit}>
             <label>
                 Title
-                <input name="name" value={values.name} onChange={handleChange} required />
+                <input name="name" value={values.name} onChange={handleChange} maxLength={200} required />
             </label>
 
             <label>
                 Genre
-                <input name="genre" value={values.genre} onChange={handleChange} list="genre-list" required />
+                <input name="genre" value={values.genre} onChange={handleChange} list="genre-list" maxLength={100} required />
                 <datalist id="genre-list">
                     {genres.map(g => <option key={g} value={g} />)}
                 </datalist>
@@ -133,11 +123,11 @@ function AnimeForm({ initialValues = EMPTY_ANIME, submitLabel, onSubmit, onCance
                     <legend>New manga</legend>
                     <label>
                         Manga title
-                        <input name="title" value={newManga.title} onChange={handleMangaChange} placeholder={values.name || 'Same as anime title'} />
+                        <input name="title" value={newManga.title} onChange={handleMangaChange} placeholder={values.name || 'Same as anime title'} maxLength={255} />
                     </label>
                     <label>
                         Author
-                        <input name="author" value={newManga.author} onChange={handleMangaChange} required />
+                        <input name="author" value={newManga.author} onChange={handleMangaChange} maxLength={255} required />
                     </label>
                     <label>
                         Volumes

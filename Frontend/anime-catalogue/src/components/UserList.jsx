@@ -56,15 +56,14 @@ function UserList() {
                                     <td>{u.username}</td>
                                     <td>{u.role}</td>
                                     <td>
-                                        {u.user_id === me?.user_id ? '(you)' : (
+                                        {/* Admins can't be deleted or changed here (the API refuses too) */}
+                                        {u.user_id === me?.user_id ? '(you)' : u.role === 'Admin' ? '—' : (
                                             <div className="row-actions">
-                                                {u.role !== 'Admin' && (
-                                                    <button onClick={() => handleMakeAdmin(u)}
-                                                        disabled={busyId === u.user_id}
-                                                        aria-label={`Make ${u.username} an admin`}>
-                                                        Make admin
-                                                    </button>
-                                                )}
+                                                <button onClick={() => handleMakeAdmin(u)}
+                                                    disabled={busyId === u.user_id}
+                                                    aria-label={`Make ${u.username} an admin`}>
+                                                    Make admin
+                                                </button>
                                                 <button className="danger" onClick={() => handleDelete(u)}
                                                     disabled={busyId === u.user_id}
                                                     aria-label={`Delete user ${u.username}`}>

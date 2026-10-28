@@ -63,9 +63,10 @@ namespace PrvaWebAplikacija.Repository
 
         public async Task<List<Manga>> GetByAuthorAsync(string author)
         {
+            var pattern = LikePattern.Contains(author.Trim());
             return await _context.Mangas
                 .AsNoTracking()
-                .Where(m => EF.Functions.ILike(m.Author, "%" + author + "%"))
+                .Where(m => EF.Functions.ILike(m.Author, pattern, LikePattern.EscapeChar))
                 .OrderBy(m => m.Title)
                 .ToListAsync();
         }
@@ -84,5 +85,12 @@ namespace PrvaWebAplikacija.Repository
             return await _context.Studios.AnyAsync(s => s.StudioId == studioId);
         }
 
+        // Same title and author, ignoring case
+        public async Task<bool> MangaExistsAsync(string title, string author)
+        {
+            var t = title.ToLower();
+            var a = author.ToLower();
+            return await _context.Mangas.AnyAsync(m => m.Title.ToLower() == t && m.Author.ToLower() == a);
+        }
     }
 }

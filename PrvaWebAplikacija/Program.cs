@@ -87,6 +87,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             NameClaimType = "name",
             RoleClaimType = "role"
         };
+
+        // A valid signature isn't enough: reject tokens of users who were deleted or whose role
+        // changed since the token was issued. They get 401 and have to log in again.
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var users = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                var sub = context.Principal?.FindFirst("sub")?.Value;
+                var role = context.Principal?.FindFirst("role")?.Value;
+
+                var user = Guid.TryParse(sub, out var userId) ? await users.GetByIdAsync(userId) : null;
+                if (user == null || user.Role != role)
+                    context.Fail("The user no longer exists or their role has changed.");
+            }
+        };
     });
 
 

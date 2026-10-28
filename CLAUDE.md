@@ -62,6 +62,7 @@ To add a feature, touch every layer: the model, the repository interface and imp
 ### Entities vs API models
 
 - Anime is the only resource with a separate API model. The `Anime` entity is mapped to the `AnimeWebCatalogue` DTO through the `ToModel` expression in `AnimeWebCatalogueRepository`. Names differ between the two (`Title`→`Name`), and the DTO adds `StudioName`, `MangaTitle` and `Author` from joined tables.
+- Create/update anime can carry `NewManga` (a `CreateMangaDto`) instead of `MangaId`. The manga is saved in the same `SaveChangesAsync` as the anime and belongs to the anime's studio, so a failed save never leaves an orphan manga. The Add/Edit anime form's "+ Add new manga" uses this.
 - The Manga and Studio repositories return EF entities directly.
 - Users are exposed as `UserDto` and never include the password hash.
 
@@ -69,22 +70,25 @@ To add a feature, touch every layer: the model, the repository interface and imp
 
 `GET api/AnimeWebCatalogue` binds `AnimeCatalogueQuery` from the query string and returns a `PagedResult<T>`.
 
-- Filters are applied only when sent. Text filters use Postgres `ILike`.
-- The service clamps `PageSize` to 1–100.
+- Filters are applied only when sent. Text filters use Postgres `ILike`, with user text escaped through `Repository/LikePattern` so `%` and `_` match literally.
+- The service clamps `PageSize` to 1–100 and `Page` to 1–100,000 (a larger page would overflow the offset).
 - `Popularity` is stored as text, so sorting uses the `PopularityRank` expression (Very high > High > Medium > Low) instead of alphabetical order.
 
 ### Errors
 
 - Services throw `NotFoundException` (mapped to 404) or `BusinessRuleException` (mapped to 400) from `PrvaWebAplikacija.Common`.
 - `ExceptionHandlingMiddleware` turns these into **plain-text** response bodies. Any other exception becomes a generic 500 and is logged.
-- Validation messages are in Croatian.
+- All user-facing messages are in English, like the UI.
+- Validation lives in the services: anime (title ≤ 200, genre ≤ 100, seasons 0–100, release year 1900–2100, popularity from `Common/Popularity.Options`, no duplicate title + release date), manga (`Service/MangaRules`, no duplicate title + author). Duplicate checks ignore case.
 - The frontend's `request()` in `src/components/api.jsx` shows the plain-text body as the error message.
 
 ### Auth
 
 - JWTs are issued by `Auth/TokenService` with the short claim names `sub`, `name` and `role`. `MapInboundClaims = false`, so read claims by these names, not by `ClaimTypes.*`.
 - Roles are defined in `Common/Roles.cs` (`Admin`, `Customer`). Controllers use `[Authorize(Roles = Roles.Admin)]` at class level, and read endpoints opt out with `[AllowAnonymous]`.
-- Registration always creates a `Customer`. An existing admin can promote a customer with `PUT api/User/{id}/make-admin` (Users page → "Make admin"); the first admin comes from the SQL seed (`borna`). A promoted user must log in again to get a token with the new role.
+- Registration always creates a `Customer`. Usernames must be 3–30 letters, digits, `_ . -` (checked on register only) and are unique ignoring case; login is case-insensitive too.
+- An existing admin can promote a customer with `PUT api/User/{id}/make-admin` (Users page → "Make admin"); the first admin comes from the SQL seed (`borna`). Admins can't be deleted through the API (only directly in the database), and nobody can delete their own account.
+- `OnTokenValidated` in `Program.cs` looks the user up on every authenticated request: a token of a deleted user, or one whose role no longer matches (e.g. just promoted), gets 401 and the frontend sends them to log in again.
 - Passwords are hashed with ASP.NET Identity's `PasswordHasher<User>`.
 - The frontend stores `token` and `user` in `localStorage`. `AdminRoute` hides admin pages in the UI only; the API enforces the role.
 

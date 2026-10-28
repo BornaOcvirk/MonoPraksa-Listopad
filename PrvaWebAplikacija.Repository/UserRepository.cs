@@ -29,18 +29,19 @@ namespace PrvaWebAplikacija.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.User_id == id);
         }
+        // Usernames are compared ignoring case, so "Borna" and "borna" are the same account.
+        // ToLower instead of ILike, because "_" in a username would act as a wildcard.
         public async Task<User?> GetByUsernameAsync(string username)
         {
+            var name = username.ToLower();
             return await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Username == username);
+                .FirstOrDefaultAsync(u => u.Username.ToLower() == name);
         }
         public async Task<bool> DoesUserExist(string username)
         {
-            var user = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Username == username);
-            return user != null;
+            var name = username.ToLower();
+            return await _context.Users.AnyAsync(u => u.Username.ToLower() == name);
         }
         public async Task<User> AddAsync(User user)
         {
@@ -48,14 +49,11 @@ namespace PrvaWebAplikacija.Repository
             await _context.SaveChangesAsync();
             return user;
         }
+        // A single DELETE statement: if the row is already gone it returns false instead of throwing
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return false;
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return true;
+            var rows = await _context.Users.Where(u => u.User_id == id).ExecuteDeleteAsync();
+            return rows > 0;
         }
         public async Task<bool> UpdateRoleAsync(Guid id, string role)
         {

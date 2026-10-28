@@ -42,6 +42,7 @@ namespace PrvaWebAplikacija.Middleware
         private static Task WriteAsync(HttpContext context, string message, int statusCode)
         {
             context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "text/plain; charset=utf-8"; // so every client decodes č, ć, ž correctly
             return context.Response.WriteAsync(message);
         }
     }

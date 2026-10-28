@@ -47,7 +47,9 @@ function Register() {
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <input
-                    placeholder="Username"
+                    placeholder="Username (3–30 letters, numbers, _ . -)"
+                    minLength={3}
+                    maxLength={30}
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     required

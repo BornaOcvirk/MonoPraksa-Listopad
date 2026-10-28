@@ -5,14 +5,19 @@ using PrvaWebAplikacija.Repository.Common;
 using PrvaWebAplikacija.Service.Common;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace PrvaWebAplikacija.Service
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private const int MinPasswordLength = 8;
+
+        // 3–30 letters (any alphabet, e.g. š), digits, "_", "." or "-". No spaces, tabs or newlines.
+        [GeneratedRegex(@"^[\p{L}\p{N}_.-]{3,30}$")]
+        private static partial Regex UsernameRule();
 
         public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
         {
@@ -29,7 +34,7 @@ namespace PrvaWebAplikacija.Service
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-                throw new NotFoundException("Korisnik ne postoji.");
+                throw new NotFoundException("User not found.");
             return ToDto(user);
         }
 
@@ -40,6 +45,10 @@ namespace PrvaWebAplikacija.Service
                 throw new BusinessRuleException($"Password must be at least {MinPasswordLength} characters.");
 
             var username = dto.Username.Trim();
+
+            // Only checked on register, so existing usernames can still log in
+            if (!UsernameRule().IsMatch(username))
+                throw new BusinessRuleException("Username must be 3–30 characters: letters, numbers, _ . or -");
 
             if (await _userRepository.DoesUserExist(username))
                 return null;
@@ -71,23 +80,30 @@ namespace PrvaWebAplikacija.Service
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-                return null;
+                throw new NotFoundException("User not found.");
 
-            var deleted = await _userRepository.DeleteAsync(id);
-            return deleted ? ToDto(user) : null;
+            // Admins can't remove each other; that is only possible directly in the database
+            if (user.Role == Roles.Admin)
+                throw new BusinessRuleException("Admins can't be deleted.");
+
+            // Someone else deleted the user in the meantime
+            if (!await _userRepository.DeleteAsync(id))
+                throw new NotFoundException("User not found.");
+
+            return ToDto(user);
         }
 
         public async Task<UserDto> MakeAdminAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-                throw new NotFoundException("Korisnik ne postoji.");
+                throw new NotFoundException("User not found.");
 
             if (user.Role == Roles.Admin)
-                throw new BusinessRuleException("Korisnik je već administrator.");
+                throw new BusinessRuleException("This user is already an admin.");
 
             if (!await _userRepository.UpdateRoleAsync(id, Roles.Admin))
-                throw new NotFoundException("Korisnik ne postoji.");
+                throw new NotFoundException("User not found.");
 
             user.Role = Roles.Admin;
             return ToDto(user);

@@ -155,3 +155,7 @@ update Anime set Genre = 'Science fiction', Number_of_seasons = 1, Price = 27.99
 
 select column_name from information_schema.columns where table_name = 'anime';
 select * from Users;
+
+-- Usernames are unique ignoring case ("Borna" = "borna"). The API checks this too;
+-- the index also stops two registrations at the same moment.
+create unique index if not exists users_username_lower_key on Users (lower(username));
